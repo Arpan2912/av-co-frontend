@@ -1,0 +1,275 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.active{
+  text-decoration: underline !important;
+}
+
+.nav-link{
+  display: inline !important;
+  line-height: 67px;
+}
+
+.text-align-right{
+  text-align: right;
+}
+
+ th{
+  font-family: Helvetica;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #545a60;
+  background-color:#f6f6f6;
+}
+
+
+ td{
+  font-family: Helvetica;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #6e777f;
+}
+
+ th,  tr{
+  /* width: 100px !important; */
+  border: 1px solid rgb(0,0,0,0.1);
+}
+
+ td{
+  border: 1px solid rgb(0,0,0,0.1);
+}
+
+
+  tr, td{
+  font-family: Helvetica;
+  font-size: 14x;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 25px;
+  letter-spacing: normal;
+  color: #6e777f;
+}
+
+.error{
+  color: red;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.margin-top-5{
+  margin-top: 5px;
+}
+.margin-bottom-5{
+  margin-bottom: 5px;
+}
+
+.margin-top-10{
+  margin-top: 10px;
+}
+
+.margin-top-20{
+  margin-top: 20px;
+}
+
+.width-100{
+  width: 100%;
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+
+#lot-history.modal-dialog{
+  max-width:1000px !important;
+}
+
+.link{
+  text-decoration: underline;
+  color:blue;
+  cursor: pointer;
+}
+
+/*  spinner  */
+
+.spinner-middle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  color: #fdbb1f;
+}
+
+.spinner-middle-con {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgb(0, 0, 0, 0.25);
+  z-index: 119;
+}
+
+
+#add-rough-history.modal-dialog{
+  max-width: 800px !important;
+}
+
+#update-rough-history.modal-dialog{
+  max-width: 800px !important;
+}
+
+.add-more{
+    background-color: white !important;
+    color: blue !important;
+    border: 0px !important;
+    text-decoration: underline;
+  }
+
+
+
+
+  .react-autosuggest__container {
+    position: relative;
+  }
+  
+  /* .react-autosuggest__input {
+    width: 240px;
+    height: 30px;
+    padding: 10px 20px;
+    font-family: Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+  } */
+  
+  
+  .react-autosuggest__input {
+    width: 100%;
+    /* width: 395px; */
+    height: 35px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: solid 1px #ced4da;
+    background-color: #ffffff;
+  }
+  
+  
+  .react-autosuggest__input--focused {
+    outline: none;
+  }
+  
+  .react-autosuggest__input--open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .react-autosuggest__suggestions-container {
+    display: none;
+  }
+  
+  .react-autosuggest__suggestions-container--open {
+    display: block;
+    position: absolute;
+    top: 38px;
+    width: 100%;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    font-family: Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    z-index: 2;
+  }
+  
+  .react-autosuggest__suggestions-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  .react-autosuggest__suggestion {
+    cursor: pointer;
+    padding: 10px 20px;
+  }
+  
+  .react-autosuggest__suggestion--highlighted {
+    background-color: #ddd;
+  }
+  
+  .react-autosuggest__container {
+    text-align: left;
+  }
+
+  .font-weight-bold{
+    font-weight: bold;
+  }
+
+  .download-link{
+    text-decoration: underline;
+    cursor: pointer;
+    color: darkslateblue;
+  }
+
+  select {
+    width: 100%;
+    background-color: white;
+    height: 35px;
+    border-radius: 4px;
+  }
+
+  button {
+    padding: 10px;
+    border-radius: 26px !important;
+    color: #495057;
+    background-color: #fdbb1f;
+    border: 0px;
+    font-weight: bold;
+    font-size: 14px !important;
+  }
