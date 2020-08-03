@@ -40,7 +40,7 @@ let defaultControls = {
   //   nullValue: null
   // },
   status: {
-    value: 'in-stock',
+    value: 'current-stock',
     valid: null,
     touched: false,
     nullValue: null,
