@@ -121,12 +121,14 @@ class Stocks extends Component {
         const {downloadCheckbox}=controls;
         const prepareRows = stocks.map(s => <tr>
             <td>{s.stock_id}</td>
+            <td>{s.status}</td>
+            <td>{s.buy_person_name}</td>
             <td>
                 <div>{formatDate(s.buy_date)}</div>
             </td>
             <td>{s.buy_price}</td>
-            <td>{s.status}</td>
-            <td>{formatDate(s.sell_date)}</td>
+            <td>{s.sell_person_name}</td>
+            <td>{s.sell_date && formatDate(s.sell_date)}</td>
             <td>{s.sell_price}</td>
             <td onClick={this.openAddStockModal.bind(this, s)}>
               <Ionicon icon="md-create" fontSize="16px" color="#fdbb1f" />
@@ -173,9 +175,11 @@ class Stocks extends Component {
                                     <thead>
                                         <tr>
                                             <th>Stock Id</th>
+                                            <th>Status</th>
+                                            <th>Buy Contact</th>
                                             <th>Buy Date</th>
                                             <th>Buy Price</th>
-                                            <th>Status</th>
+                                            <th>Sell Contact</th>
                                             <th>Sell Date</th>
                                             <th>Sell Price</th>
                                             <th>Action</th>

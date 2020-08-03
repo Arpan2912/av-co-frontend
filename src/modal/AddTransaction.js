@@ -3,6 +3,7 @@ import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Row, Col, Input, Fo
 import DatePicker from 'react-datepicker';
 
 import CustomSpinner from '../components/CustomSpinner/CustomSpinner';
+import SearchContact from '../components/SearchContact/SearchContact';
 
 import TransactionService from '../services/TransactionService';
 import ContactService from '../services/ContactService';
@@ -60,20 +61,26 @@ let defaultControls = {
     invalidPassword: null
   } 
 }
+
 export default class AddTransaction extends Component {
 
   state = {
     contacts:[],
     controls: JSON.parse(JSON.stringify(defaultControls)),
-    isLoading: false
+    isLoading: false,
+    personName :null, 
+    search:null,
+    showPersonList : false
   }
 
   constructor() {
     super();
+    this.container = React.createRef();
   }
 
 
   componentDidMount() {
+    document.addEventListener("mousedown", this.handleClickOutside);
     const { transactionData } = this.props;
     console.log("transactionData", transactionData);
     this.getContacts();
@@ -98,6 +105,10 @@ export default class AddTransaction extends Component {
 
       this.setState({ controls });
     }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
   handleInputChange = (e) => {
@@ -125,8 +136,18 @@ export default class AddTransaction extends Component {
   handleValidation = (firstTime, isSubmit) => {
     let { controls, isFormValid } = this.state;
     let { 
-      transactionDate, type, mode, note, amount
+      transactionDate, type, mode, note, amount, person
     } = controls;
+
+    if (firstTime === true || person.touched === true || isSubmit) {
+      person = Validation.notNullValidator(person);
+      person.valid = !(person.nullValue);
+      if (((isSubmit || person.touched) && person.valid === false)) {
+        person.showErrorMsg = true;
+      } else {
+        person.showErrorMsg = false;
+      }
+    }
 
     if (firstTime === true || type.touched === true || isSubmit) {
       type = Validation.notNullValidator(type);
@@ -164,7 +185,8 @@ export default class AddTransaction extends Component {
     if (
       type.valid === true &&
       mode.valid === true && 
-      amount.valid === true
+      amount.valid === true &&  
+      person.valid === true
       // last_name.valid === true &&
       // email.valid === true &&
       // mobile1.valid === true &&
@@ -189,8 +211,9 @@ export default class AddTransaction extends Component {
     return isFormValid;
   }
 
-  getContacts = () =>{
-    ContactService.getContacts(1,10,null,false)
+  getContacts = () => {
+    const { personName } =this.state;
+    ContactService.getContacts(1,1000000,personName,false)
       .then(data=>{
         console.log("data",data);
         if(data.data && data.data.data && data.data.data.contacts){
@@ -201,6 +224,36 @@ export default class AddTransaction extends Component {
         console.log("e",e);
       })
   }
+
+
+  // handlePersonSearchChange = (e) => {
+  //   let { personName, controls } = this.state;
+  //   const { person } = controls;
+  //   personName = e.target.value;
+  //   person.value = null;
+  //   // const value = e.target.value;
+  //   this.setState({ personName,controls  },()=>{
+  //     this.getContacts();
+  //   });
+  // }
+
+  // openPersonToggle = () => {
+  //   let { showPersonList } = this.state;
+  //   showPersonList = true;
+  //   this.setState({
+  //     showPersonList
+  //   });
+  // }
+
+  // onSelectPerson = (contact) => {
+  //   let { personName, showPersonList, controls } = this.state;
+  //   const { person } = controls;
+  //   const { name, uuid } = contact;
+  //   personName = name;
+  //   person.value = uuid;
+  //   showPersonList = false;
+  //   this.setState({ personName, controls, showPersonList });
+  // }
 
   saveDetail = (isEdit) => {
     const { controls } = this.state;
@@ -215,8 +268,14 @@ export default class AddTransaction extends Component {
     }
     console.log("controls", controls);
     const { contactData } = this.props;
+    let transactionDateVar = null;
+    if(transactionDate.value){
+      transactionDate.value.setHours(5,30,0,0);
+      console.log("transactionDate",transactionDate);
+      transactionDateVar = transactionDate.value.toISOString();
+    }
     let obj = {
-      transactionDate: transactionDate.value,
+      transactionDate: transactionDateVar,
       type: type.value,
       mode: mode.value,
       amount: amount.value,
@@ -254,9 +313,26 @@ export default class AddTransaction extends Component {
       })
   }
 
+  handleClickOutside = event => {
+      if (this.container.current && !this.container.current.contains(event.target)) {
+        // if (!this.container.current ) {
+        console.log("setting to hide")
+        this.setState({
+          showPersonList: false,
+        });
+      }
+  }
+  
+  getSelectedPersonControl = (personControl) => {
+    const { controls } = this.state;
+    controls.person = personControl;
+    console.log("person",controls);
+    this.setState({ controls });
+  }
+
   render() {
     const { transactionData } = this.props;
-    const { controls,isLoading, contacts } = this.state;
+    const { controls,isLoading, contacts, personName, personUuid, showPersonList } = this.state;
     const { transactionDate, mode, type, amount, note, person } = controls;
 
 
@@ -294,21 +370,40 @@ export default class AddTransaction extends Component {
                 </div>
               </FormGroup>
             </Col>
-            {/* <Col>
-              <FormGroup>
-                <Label for="name">Last Name</Label>
-                <Input
-                  type="text"
-                  id="last_name"
-                  name="last_name"
-                  value={last_name.value}
-                  onChange={this.handleInputChange}
-                ></Input>
-                {last_name.showErrorMsg && <div className="error">* Please enter last name</div>}
-              </FormGroup>
-            </Col> */}
+            
           </Row>
-          <Row>
+          <Row >
+            <Col>
+              <Label for="person">Contact Name</Label>
+              <SearchContact 
+                ref={this.container} 
+                person={person}
+                getSelectedPersonControl={this.getSelectedPersonControl}
+              ></SearchContact>
+              {person.showErrorMsg && <div className="error">* Please select person name</div>}
+
+                {/* <div ref={this.container}>
+                  <Label for="status">Contact Name</Label>
+                  <Input type="text" name="person" autoComplete="off" value={personName} onChange={this.handlePersonSearchChange.bind(this)}
+                    onFocus={this.openPersonToggle.bind(this)}></Input>
+                  {person.showErrorMsg && <div className="error">* Please select person name</div>}
+                  {showPersonList &&
+                    <div className="p-list">
+                      {contacts.map((c, i) =>
+                        <Button
+                          className="list-button"
+                          onClick={this.onSelectPerson.bind(this, c)}
+                        >
+                          {c.name}
+                        </Button>
+                      )}
+                    </div>
+                  }
+                </div> */}
+
+              </Col>
+          </Row>
+          <Row className="margin-top-5">
             <Col>
               <FormGroup>
                 <Label for="type">Type</Label>
@@ -367,27 +462,7 @@ export default class AddTransaction extends Component {
             </Col>
           </Row>
           
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="person">Contact Name</Label>
-                <div>
-                  <select name="person" onChange={this.handleInputChange} value={person.value}>
-                    <option>None</option>
-                    {contacts.map(c=><option value={c.uuid}>{c.name}</option>)}
-                  </select>
-                  {/* <Input
-                    type="number"
-                    id="person"
-                    name="person"
-                    value={person.value}
-                    onChange={this.handleInputChange}
-                  ></Input> */}
-                  {person.showErrorMsg && <div className="error">* Please enter phone number</div>}
-                </div>
-              </FormGroup>
-            </Col>
-          </Row>
+          
           <Button onClick={transactionData ? this.saveDetail.bind(this,true): this.saveDetail}>
             Save
           </Button>

@@ -3,6 +3,7 @@ import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Row, Col, Input, Fo
 import DatePicker from 'react-datepicker';
 
 import CustomSpinner from '../components/CustomSpinner/CustomSpinner';
+import SearchContact from '../components/SearchContact/SearchContact';
 
 import StockService from '../services/StockService';
 import ContactService from '../services/ContactService';
@@ -12,12 +13,12 @@ import ModalService from '../services/ModalService';
 let isLoading = false;
 let statusDropDownOptions = [
   {
-    key:'In Stock',
-    value:'in-stock'
+    key:'Current Stock',
+    value:'current-stock'
   },
   {
-    key:'In Sell',
-    value:'in-sell'
+    key:'Jangad',
+    value:'jangad'
   },
   {
     key:'Sold',
@@ -98,6 +99,8 @@ export default class AddStock extends Component {
 
   constructor() {
     super();
+    this.buyPersonIdContainer = React.createRef();
+    this.sellPersonIdContainer = React.createRef();
   }
 
  
@@ -302,6 +305,20 @@ export default class AddStock extends Component {
     return isFormValid;
   }
 
+  getSelectedBuyPersonControl = (personControl) => {
+    const { controls } = this.state;
+    controls.buyPersonId = personControl;
+    console.log("person",controls);
+    this.setState({ controls });
+  }
+
+  getSelectedSellPersonControl = (personControl) => {
+    const { controls } = this.state;
+    controls.sellPersonId = personControl;
+    console.log("person",controls);
+    this.setState({ controls });
+  }
+
   getContacts = () =>{
     ContactService.getContacts(1,10,null,false)
       .then(data=>{
@@ -328,13 +345,25 @@ export default class AddStock extends Component {
     // if (isFormValid === false) {
     //   return;
     // }
+    let buyDateVar = null;
+    let sellDateVar = null;
+    if(buyDate.value){
+      buyDate.value.setHours(5,30,0,0);
+      console.log("buyDate",buyDate);
+      buyDateVar = buyDate.value.toISOString();
+    }
+    if(sellDate.value){
+      sellDate.value.setHours(5,30,0,0);
+      console.log("sellDate",sellDate);
+      sellDateVar = sellDate.value.toISOString();
+    }
     console.log("controls", controls);
     let obj = {
       stockId: stockId.value,
-      buyDate: buyDate.value,
+      buyDate: buyDateVar,
       buyPersonId: buyPersonId.value,
       buyPrice: buyPrice.value,
-      sellDate: sellDate.value,
+      sellDate: sellDateVar,
       sellPersonId: sellPersonId.value,
       sellPrice: sellPrice.value,
       status: status.value,
@@ -369,12 +398,25 @@ export default class AddStock extends Component {
     //   return;
     // }
     console.log("controls", controls);
+    let buyDateVar = null;
+    let sellDateVar = null;
+    if(buyDate.value){
+      buyDate.value.setHours(5,30,0,0);
+      console.log("buyDate",buyDate);
+      buyDateVar = buyDate.value.toISOString();
+    }
+    if(sellDate.value){
+      sellDate.value.setHours(5,30,0,0);
+      console.log("sellDate",sellDate);
+      sellDateVar = sellDate.value.toISOString();
+    }
+
     let obj = {
       stockId: stockId.value,
-      buyDate: buyDate.value,
+      buyDate:buyDateVar,
       buyPersonId: buyPersonId.value,
       buyPrice: buyPrice.value,
-      sellDate: sellDate.value,
+      sellDate: sellDateVar,
       sellPersonId: sellPersonId.value,
       sellPrice: sellPrice.value,
       status: status.value,
@@ -450,7 +492,7 @@ export default class AddStock extends Component {
               </FormGroup>
             </Col>
           </Row>
-          {status.value === 'in-stock' && <Row>
+          {status.value === 'current-stock' && <Row>
             <Col>
                 <FormGroup>
                 <Label for="password" className="field-title">Buy Date</Label>
@@ -495,16 +537,21 @@ export default class AddStock extends Component {
             <Col>
               <FormGroup>
                 <Label for="buyPersonId">Buy Contact</Label>
-                <select name="buyPersonId" onChange={this.handleInputChange} value={buyPersonId.value}>
+                <SearchContact 
+                  ref={this.buyPersonIdContainer} 
+                  person={buyPersonId}
+                  getSelectedPersonControl={this.getSelectedBuyPersonControl}
+                ></SearchContact>
+                {/* <select name="buyPersonId" onChange={this.handleInputChange} value={buyPersonId.value}>
                   <option>None</option>
                   {contacts.map(c=><option value={c.uuid}>{c.name}</option>)}
-                </select>
+                </select> */}
                 {buyPersonId.showErrorMsg && <div className="error">* Please enter phone number</div>}
               </FormGroup>
             </Col>
           </Row>}
 
-          {(status.value === 'in-sell' || status.value === 'sold') && <Row>
+          {(status.value === 'jangad' || status.value === 'sold') && <Row>
             <Col>
                 <FormGroup>
                 <Label for="password" className="field-title">Sell Date</Label>
@@ -549,10 +596,15 @@ export default class AddStock extends Component {
             <Col>
               <FormGroup>
                 <Label for="sellPersonId">Sell Contact</Label>
-                <select name="sellPersonId" onChange={this.handleInputChange} value={sellPersonId.value}>
+                <SearchContact 
+                  ref={this.sellPersonIdContainer} 
+                  person={sellPersonId}
+                  getSelectedPersonControl={this.getSelectedSellPersonControl}
+                ></SearchContact>
+                {/* <select name="sellPersonId" onChange={this.handleInputChange} value={sellPersonId.value}>
                   <option>None</option>
                   {contacts.map(c=><option value={c.uuid}>{c.name}</option>)}
-                </select>
+                </select> */}
                 {sellPersonId.showErrorMsg && <div className="error">* Please enter phone number</div>}
               </FormGroup>
             </Col>

@@ -1,13 +1,13 @@
 module.exports = {
   routes: {
-    API_URL:'http://localhost:3001/',
+    API_URL:'http://localhost:3002/',
 
     SIGNIN: 'auth/signin',
     SIGNUP: 'auth/signup',
 
     ADD_CONTACT: 'contact/add-contact',
     UPDATE_CONTACT: 'contact/update-contact',
-  GET_CONTACTS: 'contact/get-contacts',
+    GET_CONTACTS: 'contact/get-contacts',
     UPLOAD_EXCEL:'contact/upload-excel',
 
     ADD_STOCK: 'stock/add-stock',
