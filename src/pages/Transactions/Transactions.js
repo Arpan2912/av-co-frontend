@@ -158,8 +158,8 @@ class Transactions extends Component {
             <td>{t.debit}</td>
             <td>{t.mode}</td>
             <td>{t.note}</td>
-            <td onClick={this.openAddTransactionModal.bind(this, t)}>
-              <Ionicon icon="md-create" fontSize="16px" color="#fdbb1f" />
+            <td>
+              {t.mode !== 'stock' && <Ionicon onClick={this.openAddTransactionModal.bind(this, t)} icon="md-create" fontSize="16px" color="#fdbb1f" />}
             </td>
         </tr>)
         return (

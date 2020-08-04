@@ -46,6 +46,13 @@ let defaultControls = {
     nullValue: null,
     invalidPassword: null
   },
+  weight: {
+    value: null,
+    valid: null,
+    touched: false,
+    nullValue: null,
+    invalidPassword: null
+  },
   buyDate: {
     value: '',
     valid: null,
@@ -112,7 +119,7 @@ export default class AddStock extends Component {
       const { controls } = this.state;
       const { 
         stockId,buyDate,buyPrice,buyPersonId,sellDate,
-        sellPersonId,sellPrice,status
+        sellPersonId,sellPrice,status,weight
       } = controls;
       
       stockId.value = stockData.stock_id;
@@ -125,6 +132,7 @@ export default class AddStock extends Component {
       sellPrice.value = stockData.sell_price;
       sellPersonId.value = stockData.sell_person_id;
       status.value = stockData.status;
+      weight.value = stockData.weight;
       this.setState({ controls });
     }
     this.getContacts();
@@ -154,7 +162,7 @@ export default class AddStock extends Component {
   handleValidation = (firstTime, isSubmit) => {
     let { controls, isFormValid } = this.state;
     let { 
-      name
+      name,weight
     } = controls;
 
     if (firstTime === true || name.touched === true || isSubmit) {
@@ -335,7 +343,7 @@ export default class AddStock extends Component {
   saveDetail = () => {
     const { controls } = this.state;
     const { stockId,buyDate, buyPersonId,
-      buyPrice,sellDate,sellPrice,sellPersonId,status
+      buyPrice,sellDate,sellPrice,sellPersonId,status,weight
     } = controls;   
 
     if (isLoading === true) {
@@ -367,6 +375,7 @@ export default class AddStock extends Component {
       sellPersonId: sellPersonId.value,
       sellPrice: sellPrice.value,
       status: status.value,
+      weight:weight.value
     }
     this.setState({ isLoading: true });
     isLoading = true;
@@ -391,7 +400,7 @@ export default class AddStock extends Component {
     const { stockData} = this.props;
     const { controls } = this.state;
     const { stockId,buyDate, buyPersonId,
-      buyPrice,sellDate,sellPrice,sellPersonId,status
+      buyPrice,sellDate,sellPrice,sellPersonId,status,weight
     } = controls;   
     // const isFormValid = this.handleValidation(false, true);
     // if (isFormValid === false) {
@@ -420,6 +429,7 @@ export default class AddStock extends Component {
       sellPersonId: sellPersonId.value,
       sellPrice: sellPrice.value,
       status: status.value,
+      weight:weight.value,
       id: stockData.uuid
     }
     this.setState({ isLoading: true });
@@ -445,7 +455,7 @@ export default class AddStock extends Component {
     const { stockData, } = this.props;
     const { controls, contacts } = this.state;
     const { stockId,buyDate, buyPersonId,
-      buyPrice,sellDate,sellPrice,sellPersonId,status
+      buyPrice,sellDate,sellPrice,sellPersonId,status,weight
     } = controls;   
 
     return <Modal isOpen={this.props.show} toggle={this.props.closeModal} >
@@ -466,6 +476,19 @@ export default class AddStock extends Component {
                 ></Input>
                 {stockId.showErrorMsg && <div className="error">* Please enter name</div>}
 
+              </FormGroup>
+            </Col>
+            <Col>
+              <FormGroup>
+                <Label for="weight">Weight</Label>
+                <Input
+                  type="number"
+                  id="weight"
+                  name="weight"
+                  value={weight.value}
+                  onChange={this.handleInputChange}
+                ></Input>
+                {weight.showErrorMsg && <div className="error">* Please enter weight</div>}
               </FormGroup>
             </Col>
             {/* <Col>
@@ -580,7 +603,7 @@ export default class AddStock extends Component {
                 </div>
               </FormGroup>
             </Col>
-            {status.value === 'sold' && <Col>
+            {<Col>
               <FormGroup>
                 <Label for="sellPrice">Sell Price</Label>
                 <Input

@@ -122,6 +122,7 @@ class Stocks extends Component {
         const prepareRows = stocks.map(s => <tr>
             <td>{s.stock_id}</td>
             <td>{s.status}</td>
+            <td>{s.weight}</td>
             <td>{s.buy_person_name}</td>
             <td>
                 <div>{formatDate(s.buy_date)}</div>
@@ -176,6 +177,7 @@ class Stocks extends Component {
                                         <tr>
                                             <th>Stock Id</th>
                                             <th>Status</th>
+                                            <th>Weight</th>
                                             <th>Buy Contact</th>
                                             <th>Buy Date</th>
                                             <th>Buy Price</th>

@@ -277,8 +277,9 @@ class Dashboard extends Component {
               <Table className="width-100 margin-top-10">
                 <thead>
                   <tr>
-                    <th>Name</th>
+                    <th style={{width:'190px'}}>Name</th>
                     <th>Stock Id</th>
+                    <th>Total Weight</th>
                     <th>Total diamond piece</th>
                     <th>Total diamond price</th>
                   </tr>
@@ -287,6 +288,7 @@ class Dashboard extends Component {
                   {dalalData.map(d=><tr>
                     <td>{d.name}</td>
                     <td>{d.stones}</td>
+                    <td>{d.weight}</td>
                     <td>{d.totalStones}</td>
                     <td>{d.amount}</td>
                   </tr>)}
