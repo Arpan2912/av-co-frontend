@@ -12,7 +12,15 @@ export default class StockService {
     return request('POST', `${API_URL}${routes.UPDATE_STOCK}`, null, contactObj, null)
   }
 
-  static getStocks(page, pageSize, search,isDownload,body) {
+  static deleteStock(uuid) {
+    let qp = `?`;
+    if (uuid) {
+      qp += `u=${uuid}&`
+    }
+    return request('DELETE', `${API_URL}${routes.DELETE_STOCKS}${qp}`, null, null, null)
+  }
+
+  static getStocks(page, pageSize, search,isDownload,body,status) {
     let qp = `?`;
     if (page) {
       qp += `page=${page}&`
@@ -22,6 +30,9 @@ export default class StockService {
     }
     if (search) {
       qp += `search=${search}&`
+    }
+    if (status) {
+      qp += `status=${status}&`
     }
     if (isDownload) {
       qp += `downloadExcel=${isDownload}&`

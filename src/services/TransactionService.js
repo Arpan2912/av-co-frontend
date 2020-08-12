@@ -12,7 +12,7 @@ export default class TransactionService {
     return request('POST', `${API_URL}${routes.UPDATE_TRANSACTION}`, null, contactObj, null)
   }
 
-  static getTransactions(page, pageSize, search,isDownload,body,personId) {
+  static getTransactions(page, pageSize, search,isDownload,body,personId,mode) {
     let qp = `?`;
     if (page) {
       qp += `page=${page}&`
@@ -22,6 +22,9 @@ export default class TransactionService {
     }
     if (search) {
       qp += `search=${search}&`
+    }
+    if (mode) {
+      qp += `mode=${mode}&`
     }
     if (isDownload) {
       qp += `downloadExcel=${isDownload}&`

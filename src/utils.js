@@ -1,3 +1,5 @@
+import ModalService from './services/ModalService';
+
 const monthObj = {
   1: "Jan",
   2: "Feb",
@@ -58,4 +60,12 @@ export function objectToQuerystring (obj) {
     }
     return [str, delimiter, key, '=', val].join('');
   }, '');
+}
+
+export function showErrorMsg(title,e){
+  let msg= 'Something went wrong';
+  if(e && e.response && e.response.data && e.response.data.message){
+      msg = e.response.data.message;
+  }
+  ModalService.openAlert(title,msg,'failure');
 }

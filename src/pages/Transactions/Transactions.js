@@ -4,6 +4,7 @@ import Ionicon from 'react-ionicons';
 
 import Pagination from '../../components/Pagination/Pagination';
 
+
 import TransactionService from '../../services/TransactionService';
 import Validation from '../../services/Validation';
 
@@ -37,15 +38,31 @@ class Transactions extends Component {
                 required: true,
                 showErrorMsg: false
               },
-        }
+        },
+        mode:'all'
     }
 
-    componentDidMount() {
+    componentDidMount() {   
         this.getTransactions();
     }
 
+    handleInputChange = (e) => {
+        const controlName = e.target.name;
+        const controlValue = e.target.value;
+        let stateValue = controlValue;
+        let obj = {
+            page:1
+        };
+        obj[controlName]=stateValue;
+        console.log("obj",obj);
+        this.setState(obj,()=>{
+            this.getTransactions()
+        });
+        // this.handleValidation();
+    }
+
     getTransactions = (isDownload) => {
-        let { controls, page, search }=this.state;
+        let { controls, page, search,mode }=this.state;
         console.log("this.props",this.props);
         let personId = null;
         if(this.props.location && this.props.location.contactData){
@@ -55,7 +72,7 @@ class Transactions extends Component {
         let body={
             downloadExcelFields:downloadCheckbox.value
         }
-        TransactionService.getTransactions(page, pageSize, search,isDownload,body,personId)
+        TransactionService.getTransactions(page, pageSize, search,isDownload,body,personId,mode)
             .then(data => {
                 console.log(data.data);
                 if(isDownload){
@@ -145,7 +162,7 @@ class Transactions extends Component {
     render() {
         const { transactions, selectedContactToUpdate, isAddContactModalOpen,
              page, totalRecords, search,controls,
-             isUploadContactModalOpen,isAddTransactionModalOpen,selectedTransactionToUpdate
+             isUploadContactModalOpen,isAddTransactionModalOpen,selectedTransactionToUpdate,mode
             } = this.state;
         const {downloadCheckbox}=controls;
         const prepareRows = transactions.map(t => <tr>
@@ -189,7 +206,8 @@ class Transactions extends Component {
                         <Card>
                             <CardBody>
                                 <Row>
-                                    <Col sm="4">
+                                    <Col sm="3">
+                                    <Label for="mode">Search</Label>
                                         <Input
                                             name="search"
                                             id="search"
@@ -198,6 +216,17 @@ class Transactions extends Component {
                                             onChange={this.handleSearchInput}
                                             value={search}
                                         ></Input>
+                                    </Col>
+                                    <Col sm="2">
+                                        <Label for="mode">Mode</Label>
+                                        <div>
+                                            <select name="mode" onChange={this.handleInputChange} value={mode}>
+                                                <option value='all'>All</option>
+                                                <option value='cash'>Cash</option>
+                                                <option value='check'>Check</option>
+                                                <option value='stock'>Stock</option>
+                                            </select>
+                                        </div>
                                     </Col>
                                     <Col className="text-align-right">
                                     <span className="download-link" onClick={this.openAddTransactionModal.bind(this, null)}>Add Transaction</span>&nbsp;&nbsp;

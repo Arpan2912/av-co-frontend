@@ -13,6 +13,7 @@ module.exports = {
     ADD_STOCK: 'stock/add-stock',
     UPDATE_STOCK: 'stock/update-stock',
     GET_STOCKS: 'stock/get-stocks',
+    DELETE_STOCKS: 'stock/delete-stock',
     
     ADD_TRANSACTION: 'transaction/add-transaction',
     UPDATE_TRANSACTION: 'transaction/update-transaction',
