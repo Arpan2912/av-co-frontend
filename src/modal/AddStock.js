@@ -160,157 +160,112 @@ export default class AddStock extends Component {
   }
 
   handleValidation = (firstTime, isSubmit) => {
-    let { controls, isFormValid } = this.state;
+    let { controls } = this.state;
     let { 
-      name,weight
+      stockId,weight,buyDate,buyPrice,
+      sellDate,sellPrice,buyPersonId,
+      sellPersonId,status
     } = controls;
 
-    if (firstTime === true || name.touched === true || isSubmit) {
-      name = Validation.notNullValidator(name);
-      name.valid = !(name.nullValue);
-      if (((isSubmit || name.touched) && name.valid === false)) {
-        name.showErrorMsg = true;
+    if (firstTime === true || stockId.touched === true || isSubmit) {
+      stockId = Validation.notNullValidator(stockId);
+      stockId.valid = !(stockId.nullValue);
+      if (((isSubmit || stockId.touched) && stockId.valid === false)) {
+        stockId.showErrorMsg = true;
       } else {
-        name.showErrorMsg = false;
+        stockId.showErrorMsg = false;
       }
     }
 
-    // if (firstTime === true || last_name.touched === true || isSubmit) {
-    //   last_name = Validation.notNullValidator(last_name);
-    //   last_name.valid = !(last_name.nullValue);
-    //   if (((isSubmit || last_name.touched) && last_name.valid === false)) {
-    //     last_name.showErrorMsg = true;
-    //   } else {
-    //     last_name.showErrorMsg = false;
-    //   }
-    // }
-
-    // if (firstTime === true || mobile1.touched === true || isSubmit) {
-    //   // mobile1 = Validation.notNullValidator(mobile1);
-    //   // mobile1.valid = !(mobile1.nullValue);
-    //   if (((isSubmit || mobile1.touched) && mobile1.valid === false)) {
-    //     mobile1.showErrorMsg = true;
-    //   } else {
-    //     mobile1.showErrorMsg = false;
-    //   }
-    // }
-
-    // if (firstTime === true || mobile2.touched === true || isSubmit) {
-    //   // mobile2 = Validation.notNullValidator(mobile2);
-    //   // mobile2.valid = !(mobile2.nullValue);
-    //   if (((isSubmit || mobile2.touched) && mobile2.valid === false)) {
-    //     mobile2.showErrorMsg = true;
-    //   } else {
-    //     mobile2.showErrorMsg = false;
-    //   }
-    // }
-
-    // if (firstTime === true || mobile3.touched === true || isSubmit) {
-    //   // mobile3 = Validation.notNullValidator(mobile3);
-    //   // mobile3.valid = !(mobile3.nullValue);
-    //   if (((isSubmit || mobile3.touched) && mobile3.valid === false)) {
-    //     mobile3.showErrorMsg = true;
-    //   } else {
-    //     mobile3.showErrorMsg = false;
-    //   }
-    // }
-
-    // if (firstTime === true || mobile4.touched === true || isSubmit) {
-    //   // mobile4 = Validation.notNullValidator(mobile4);
-    //   // mobile4.valid = !(mobile4.nullValue);
-    //   if (((isSubmit || mobile4.touched) && mobile4.valid === false)) {
-    //     mobile4.showErrorMsg = true;
-    //   } else {
-    //     mobile4.showErrorMsg = false;
-    //   }
-    // }
-
-    // if (firstTime === true || email.touched === true || isSubmit) {
-    //   // email = Validation.notNullValidator(email);
-    //   email = Validation.emailValidator(email);
-    //   email.valid = !(email.invalidEmail);
-    //   if (((isSubmit || email.touched) && email.valid === false)) {
-    //     email.showErrorMsg = true;
-    //   } else {
-    //     email.showErrorMsg = false;
-    //   }
-    // }
-
-    // if (firstTime === true || address.touched === true || isSubmit) {
-    //   // address = Validation.notNullValidator(address);
-    //   address.valid = !(address.nullValue);
-    //   if (((isSubmit || address.touched) && address.valid === false)) {
-    //     address.showErrorMsg = true;
-    //   } else {
-    //     address.showErrorMsg = false;
-    //   }
-    // }
-
-    // if (firstTime === true || income.touched === true || isSubmit) {
-    //   // income = Validation.notNullValidator(income);
-    //   income.valid = !(income.nullValue);
-    //   if (((isSubmit || income.touched) && income.valid === false)) {
-    //     income.showErrorMsg = true;
-    //   } else {
-    //     income.showErrorMsg = false;
-    //   }
-    // }
-
-    // if (firstTime === true || living.touched === true || isSubmit) {
-    //   // living = Validation.notNullValidator(living);
-    //   living.valid = !(living.nullValue);
-    //   if (((isSubmit || living.touched) && living.valid === false)) {
-    //     living.showErrorMsg = true;
-    //   } else {
-    //     living.showErrorMsg = false;
-    //   }
-    // }
-
-    // if (firstTime === true || family_members.touched === true || isSubmit) {
-    //   // family_members = Validation.notNullValidator(family_members);
-    //   family_members.valid = !(family_members.nullValue);
-    //   if (((isSubmit || family_members.touched) && family_members.valid === false)) {
-    //     family_members.showErrorMsg = true;
-    //   } else {
-    //     family_members.showErrorMsg = false;
-    //   }
-    // }
-   
-    // if (firstTime === true || additional_detail.touched === true || isSubmit) {
-    //   // additional_detail = Validation.notNullValidator(additional_detail);
-    //   additional_detail.valid = !(additional_detail.nullValue);
-    //   if (((isSubmit || additional_detail.touched) && additional_detail.valid === false)) {
-    //     additional_detail.showErrorMsg = true;
-    //   } else {
-    //     additional_detail.showErrorMsg = false;
-    //   }
-    // }
-   
-
-    if (
-      name.valid === true 
-      // last_name.valid === true &&
-      // email.valid === true &&
-      // mobile1.valid === true &&
-      // mobile2.valid === true &&
-      // mobile3.valid === true &&
-      // mobile4.valid === true &&
-      // address.valid === true &&
-      // living.valid === true &&
-      // income.valid === true &&
-      // family_members.valid === true &&
-      // additional_detail.valid === true 
-    ) {
-      isFormValid = true;
-    } else {
-      isFormValid = false;
+    if (firstTime === true || weight.touched === true || isSubmit) {
+      weight = Validation.notNullValidator(weight);
+      weight.valid = !(weight.nullValue);
+      if (((isSubmit || weight.touched) && weight.valid === false)) {
+        weight.showErrorMsg = true;
+      } else {
+        weight.showErrorMsg = false;
+      }
     }
-    console.log("isFormValid",isFormValid);
-    console.log("controls", controls);
+
+    if(status.value === 'current-stock'){
+      if (firstTime === true || buyDate.touched === true || isSubmit) {
+        console.log("buyDate",buyDate);
+        buyDate = Validation.notNullValidator(buyDate);
+        buyDate.valid = !(buyDate.nullValue);
+        if (((isSubmit || buyDate.touched) && buyDate.valid === false)) {
+          buyDate.showErrorMsg = true;
+        } else {
+          buyDate.showErrorMsg = false;
+        }
+      }
+   
+
+      if (firstTime === true || buyPrice.touched === true || isSubmit) {
+        buyPrice = Validation.notNullValidator(buyPrice);
+        buyPrice.valid = !(buyPrice.nullValue);
+        if (((isSubmit || buyPrice.touched) && buyPrice.valid === false)) {
+          buyPrice.showErrorMsg = true;
+        } else {
+          buyPrice.showErrorMsg = false;
+        }
+      }
+
+      if (firstTime === true || buyPersonId.touched === true || isSubmit) {
+        buyPersonId = Validation.notNullValidator(buyPersonId);
+        buyPersonId.valid = !(buyPersonId.nullValue);
+        if (((isSubmit || buyPersonId.touched) && buyPersonId.valid === false)) {
+          buyPersonId.showErrorMsg = true;
+        } else {
+          buyPersonId.showErrorMsg = false;
+        }
+      }
+    }
+
+  if(status.value === 'jangad' || status.value === 'sold'){
+
+    if (firstTime === true || sellPrice.touched === true || isSubmit) {
+      sellPrice = Validation.notNullValidator(sellPrice);
+      sellPrice.valid = !(sellPrice.nullValue);
+      if (((isSubmit || sellPrice.touched) && sellPrice.valid === false)) {
+        sellPrice.showErrorMsg = true;
+      } else {
+        sellPrice.showErrorMsg = false;
+      }
+    }
+
+    if (firstTime === true || sellDate.touched === true || isSubmit) {
+      sellDate = Validation.notNullValidator(sellDate);
+      sellDate.valid = !(sellDate.nullValue);
+      if (((isSubmit || sellDate.touched) && sellDate.valid === false)) {
+        sellDate.showErrorMsg = true;
+      } else {
+        sellDate.showErrorMsg = false;
+      }
+    }
+
+    if (firstTime === true || sellPersonId.touched === true || isSubmit) {
+      sellPersonId = Validation.notNullValidator(sellPersonId);
+      sellPersonId.valid = !(sellPersonId.nullValue);
+      if (((isSubmit || sellPersonId.touched) && sellPersonId.valid === false)) {
+        sellPersonId.showErrorMsg = true;
+      } else {
+        sellPersonId.showErrorMsg = false;
+      }
+    }
+  }
+  let isFormValid = stockId.valid && weight.valid;
+  if(status.value === 'current-stock'){
+    isFormValid = isFormValid && buyPersonId.valid && buyPrice.valid && buyDate.valid
+  }
+  if(status.value === 'jangad' || status.value === 'sold'){
+    isFormValid = isFormValid && sellPersonId.valid && sellPrice.valid && sellDate.valid
+  }
+  console.log("isFormValid",isFormValid);
+  console.log("controls", controls);
     // console.log('controls', controls);
     // console.log('isFormValid', isBusinessFormValid);
-    this.setState({ controls, isFormValid });
-    return isFormValid;
+  this.setState({ controls, isFormValid });
+  return isFormValid;
   }
 
   getSelectedBuyPersonControl = (personControl) => {
@@ -349,10 +304,10 @@ export default class AddStock extends Component {
     if (isLoading === true) {
       return;
     }
-    // const isFormValid = this.handleValidation(false, true);
-    // if (isFormValid === false) {
-    //   return;
-    // }
+    const isFormValid = this.handleValidation(false, true);
+    if (isFormValid === false) {
+      return;
+    }
     let buyDateVar = null;
     let sellDateVar = null;
     if(buyDate.value){
@@ -402,10 +357,10 @@ export default class AddStock extends Component {
     const { stockId,buyDate, buyPersonId,
       buyPrice,sellDate,sellPrice,sellPersonId,status,weight
     } = controls;   
-    // const isFormValid = this.handleValidation(false, true);
-    // if (isFormValid === false) {
-    //   return;
-    // }
+    const isFormValid = this.handleValidation(false, true);
+    if (isFormValid === false) {
+      return;
+    }
     console.log("controls", controls);
     let buyDateVar = null;
     let sellDateVar = null;
@@ -457,7 +412,7 @@ export default class AddStock extends Component {
     const { stockId,buyDate, buyPersonId,
       buyPrice,sellDate,sellPrice,sellPersonId,status,weight
     } = controls;   
-
+    let isUpdate = stockData && stockData.uuid ? true :false;
     return <Modal isOpen={this.props.show} toggle={this.props.closeModal} >
       <ModalHeader toggle={this.props.closeModal}>Add Stock</ModalHeader>
       <ModalBody>
@@ -473,6 +428,7 @@ export default class AddStock extends Component {
                   name="stockId"
                   value={stockId.value}
                   onChange={this.handleInputChange}
+                  disabled={isUpdate}
                 ></Input>
                 {stockId.showErrorMsg && <div className="error">* Please enter name</div>}
 
@@ -505,12 +461,21 @@ export default class AddStock extends Component {
               </FormGroup>
             </Col> */}
           </Row>
+         
           <Row>
             <Col>
               <FormGroup>
                 <Label for="status">Status</Label>
                 <select name="status" onChange={this.handleInputChange} value={status.value}>
-                  {statusDropDownOptions.map(s=><option value={s.value}>{s.key}</option>)}
+                  {statusDropDownOptions.map((s,i)=>{
+                    if(!isUpdate){
+                      if(i===0){
+                        return <option value={s.value}>{s.key}</option>
+                      }
+                    } else {
+                      return <option value={s.value}>{s.key}</option>
+                    }
+                })}
                 </select>
               </FormGroup>
             </Col>
@@ -539,7 +504,7 @@ export default class AddStock extends Component {
                     </InputGroup>
                   </Label>
                   {buyDate.showErrorMsg && <div className="error">
-                    {/* {EMPTY_BANNER_END_DATE} */}
+                    *Please enter buy date
                   </div>}
                 </div>
               </FormGroup>
@@ -598,7 +563,7 @@ export default class AddStock extends Component {
                     </InputGroup>
                   </Label>
                   {sellDate.showErrorMsg && <div className="error">
-                    {/* {EMPTY_BANNER_END_DATE} */}
+                    * Please enter sell date
                   </div>}
                 </div>
               </FormGroup>
