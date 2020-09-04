@@ -423,7 +423,7 @@ export default class AddTransaction extends Component {
                   <select name="mode" onChange={this.handleInputChange} value={mode.value}>
                     <option value='cash'>Cash</option>
                     <option value='check'>Check</option>
-                    <option value='stock'>Stock</option>
+                    {/* <option value='stock'>Stock</option> */}
                   </select>
                   {mode.showErrorMsg && <div className="error">* Please enter phone number</div>}
                 </div>

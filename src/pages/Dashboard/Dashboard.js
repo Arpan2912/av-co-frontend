@@ -179,7 +179,7 @@ class Dashboard extends Component {
       totalDalals, accountSummaryData, pageAccountSummary, pageSizeAccountSummary, totalAccountSummary,
       isAddStockModalOpen, isAddTransactionModalOpen
     } = this.state;
-    const { amount, uuid } = openingBalanceData;
+    const { value: amount, uuid } = openingBalanceData;
     const { total, openingBalance } = closingBalanceData;
     return <div>
       {
