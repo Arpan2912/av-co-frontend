@@ -241,8 +241,10 @@ export default class AddStock extends Component {
       } else {
         sellDate.showErrorMsg = false;
       }
-    }
+    } 
+  }
 
+  if(status.value === 'jangad'){
     if (firstTime === true || sellPersonId.touched === true || isSubmit) {
       sellPersonId = Validation.notNullValidator(sellPersonId);
       sellPersonId.valid = !(sellPersonId.nullValue);
@@ -258,7 +260,10 @@ export default class AddStock extends Component {
     isFormValid = isFormValid && buyPersonId.valid && buyPrice.valid && buyDate.valid
   }
   if(status.value === 'jangad' || status.value === 'sold'){
-    isFormValid = isFormValid && sellPersonId.valid && sellPrice.valid && sellDate.valid
+    isFormValid = isFormValid && sellPrice.valid && sellDate.valid
+  }
+  if(status.value === 'jangad'){
+    isFormValid = isFormValid && sellPersonId.valid 
   }
   console.log("isFormValid",isFormValid);
   console.log("controls", controls);
@@ -519,7 +524,7 @@ export default class AddStock extends Component {
                   value={buyPrice.value}
                   onChange={this.handleInputChange}
                 ></Input>
-                {buyPrice.showErrorMsg && <div className="error">* Please enter phone number</div>}
+                {buyPrice.showErrorMsg && <div className="error">* Please enter buy price</div>}
               </FormGroup>
             </Col>
             <Col>
@@ -534,7 +539,7 @@ export default class AddStock extends Component {
                   <option>None</option>
                   {contacts.map(c=><option value={c.uuid}>{c.name}</option>)}
                 </select> */}
-                {buyPersonId.showErrorMsg && <div className="error">* Please enter phone number</div>}
+                {buyPersonId.showErrorMsg && <div className="error">* Please enter buy contact</div>}
               </FormGroup>
             </Col>
           </Row>}
@@ -578,7 +583,7 @@ export default class AddStock extends Component {
                   value={sellPrice.value}
                   onChange={this.handleInputChange}
                 ></Input>
-                {sellPrice.showErrorMsg && <div className="error">* Please enter phone number</div>}
+                {sellPrice.showErrorMsg && <div className="error">* Please enter sell price</div>}
               </FormGroup>
             </Col>}
             <Col>
@@ -593,7 +598,7 @@ export default class AddStock extends Component {
                   <option>None</option>
                   {contacts.map(c=><option value={c.uuid}>{c.name}</option>)}
                 </select> */}
-                {sellPersonId.showErrorMsg && <div className="error">* Please enter phone number</div>}
+                {sellPersonId.showErrorMsg && <div className="error">* Please enter sell contact</div>}
               </FormGroup>
             </Col>
           </Row>}
