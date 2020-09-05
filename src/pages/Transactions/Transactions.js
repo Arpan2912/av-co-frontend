@@ -176,7 +176,7 @@ class Transactions extends Component {
             <td>{t.mode}</td>
             <td>{t.note}</td>
             <td>
-              {t.mode !== 'stock' && <Ionicon onClick={this.openAddTransactionModal.bind(this, t)} icon="md-create" fontSize="16px" color="#fdbb1f" />}
+              {!(t.mode === 'stock' || !t.person_id) && <Ionicon onClick={this.openAddTransactionModal.bind(this, t)} icon="md-create" fontSize="16px" color="#fdbb1f" />}
             </td>
         </tr>)
         return (
