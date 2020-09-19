@@ -33,7 +33,7 @@ class SearchContact extends Component {
 
    handleClickOutside = event => {
       const { forwardedRef } = this.props;
-      if (forwardedRef.current && !forwardedRef.current.contains(event.target)) {
+      if(forwardedRef.current && !forwardedRef.current.contains(event.target)) {
         this.setState({
           showPersonList: false,
         });
@@ -60,13 +60,14 @@ class SearchContact extends Component {
   }
 
   onSelectPerson = (contact) => {
+    const { controlName } = this.props;
     let { personName, showPersonList, controls } = this.state;
     const { person } = controls;
     const { name, uuid } = contact;
     personName = name;
     person.value = uuid;
     showPersonList = false;
-    this.props.getSelectedPersonControl(person);
+    this.props.getSelectedPersonControl(person,controlName);
     this.setState({ personName, controls, showPersonList });
   }
 

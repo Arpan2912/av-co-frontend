@@ -32,6 +32,20 @@ let defaultControls = {
     nullValue: null,
     invalidPassword: null
   },
+  debitContactName: {
+    value: '',
+    valid: null,
+    touched: false,
+    nullValue: null,
+    invalidPassword: null
+  },
+  creditContactName: {
+    value: '',
+    valid: null,
+    touched: false,
+    nullValue: null,
+    invalidPassword: null
+  },
   type: {
     value: 'credit',
     valid: null,
@@ -76,15 +90,17 @@ export default class AddTransaction extends Component {
   constructor() {
     super();
     this.container = React.createRef();
+    this.debitPersoncontainer = React.createRef();
+    this.creditPersonContainer = React.createRef();
   }
 
 
   componentDidMount() {
-    document.addEventListener("mousedown", this.handleClickOutside);
+    // document.addEventListener("mousedown", this.handleClickOutside);
     const { transactionData } = this.props;
     console.log("transactionData", transactionData);
     this.getContacts();
-    if (transactionData) {
+    if(transactionData) {
       const { controls } = this.state;
       const { 
         transactionDate, type, mode, note, amount, person
@@ -108,7 +124,7 @@ export default class AddTransaction extends Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener("mousedown", this.handleClickOutside);
+    // document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
   handleInputChange = (e) => {
@@ -139,20 +155,22 @@ export default class AddTransaction extends Component {
       transactionDate, type, mode, note, amount, person
     } = controls;
 
-    if (firstTime === true || person.touched === true || isSubmit) {
-      person = Validation.notNullValidator(person);
-      person.valid = !(person.nullValue);
-      if (((isSubmit || person.touched) && person.valid === false)) {
-        person.showErrorMsg = true;
-      } else {
-        person.showErrorMsg = false;
+    if(mode.value !== 'other'){
+      if(firstTime === true || person.touched === true || isSubmit) {
+        person = Validation.notNullValidator(person);
+        person.valid = !(person.nullValue);
+        if(((isSubmit || person.touched) && person.valid === false)) {
+          person.showErrorMsg = true;
+        } else {
+          person.showErrorMsg = false;
+        }
       }
     }
 
-    if (firstTime === true || type.touched === true || isSubmit) {
+    if(firstTime === true || type.touched === true || isSubmit) {
       type = Validation.notNullValidator(type);
       type.valid = !(type.nullValue);
-      if (((isSubmit || type.touched) && type.valid === false)) {
+      if(((isSubmit || type.touched) && type.valid === false)) {
         type.showErrorMsg = true;
       } else {
         type.showErrorMsg = false;
@@ -160,20 +178,20 @@ export default class AddTransaction extends Component {
     }
 
 
-    if (firstTime === true || mode.touched === true || isSubmit) {
+    if(firstTime === true || mode.touched === true || isSubmit) {
       mode = Validation.notNullValidator(mode);
       mode.valid = !(mode.nullValue);
-      if (((isSubmit || mode.touched) && mode.valid === false)) {
+      if(((isSubmit || mode.touched) && mode.valid === false)) {
         mode.showErrorMsg = true;
       } else {
         mode.showErrorMsg = false;
       }
     }
 
-    if (firstTime === true || amount.touched === true || isSubmit) {
+    if(firstTime === true || amount.touched === true || isSubmit) {
       amount = Validation.notNullValidator(amount);
       amount.valid = !(amount.nullValue);
-      if (((isSubmit || amount.touched) && amount.valid === false)) {
+      if(((isSubmit || amount.touched) && amount.valid === false)) {
         amount.showErrorMsg = true;
       } else {
         amount.showErrorMsg = false;
@@ -182,11 +200,11 @@ export default class AddTransaction extends Component {
 
     
 
-    if (
+    if(
       type.valid === true &&
       mode.valid === true && 
-      amount.valid === true &&  
-      person.valid === true
+      amount.valid === true 
+      // &&  person.valid === true
       // last_name.valid === true &&
       // email.valid === true &&
       // mobile1.valid === true &&
@@ -255,15 +273,15 @@ export default class AddTransaction extends Component {
   //   this.setState({ personName, controls, showPersonList });
   // }
 
-  saveDetail = (isEdit) => {
+  saveDetail = (isEdit = false) => {
     const { controls } = this.state;
-    const { transactionDate, type, mode, amount, note, person } = controls;   
+    const { transactionDate, type, mode, amount, note, person,debitContactName,creditContactName } = controls;   
     const { transactionData } = this.props;
-    if (isLoading === true) {
+    if(isLoading === true) {
       return;
     }
     const isFormValid = this.handleValidation(false, true);
-    if (isFormValid === false) {
+    if(isFormValid === false) {
       return;
     }
     console.log("controls", controls);
@@ -271,7 +289,6 @@ export default class AddTransaction extends Component {
     let transactionDateVar = null;
     if(transactionDate.value){
       transactionDate.value.setHours(5,30,0,0);
-      console.log("transactionDate",transactionDate);
       transactionDateVar = transactionDate.value.toISOString();
     }
     let obj = {
@@ -281,6 +298,13 @@ export default class AddTransaction extends Component {
       amount: amount.value,
       note: note.value,
       personId: person.value
+    }
+    console.log(mode.value,isEdit);
+    if(isEdit !== true && mode.value === 'other'){
+      delete obj.type;
+      delete obj.personId;
+      obj.debitPersonId = debitContactName.value;
+      obj.creditPersonId = creditContactName.value;
     }
     
     if(isEdit === true){
@@ -293,13 +317,17 @@ export default class AddTransaction extends Component {
     if(isEdit === true){
       functionToCall = TransactionService.updateTransaction(obj);
     } else {
-      functionToCall = TransactionService.addTransaction(obj);
+      if(mode.value === 'other'){
+        functionToCall = TransactionService.addOtherTransaction(obj);
+      } else {
+        functionToCall = TransactionService.addTransaction(obj);
+      }
     }
 
     functionToCall
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
-        if (message) {
+        if(message) {
           ModalService.openAlert('Person', message, 'success');
         }
         this.setState({ isLoading: false });
@@ -314,26 +342,25 @@ export default class AddTransaction extends Component {
   }
 
   handleClickOutside = event => {
-      if (this.container.current && !this.container.current.contains(event.target)) {
-        // if (!this.container.current ) {
-        console.log("setting to hide")
-        this.setState({
-          showPersonList: false,
-        });
-      }
+    if(this.container.current && !this.container.current.contains(event.target)) {
+      // if(!this.container.current ) {
+      console.log("setting to hide");
+      this.setState({
+        showPersonList: false,
+      });
+    }
   }
   
-  getSelectedPersonControl = (personControl) => {
+  getSelectedPersonControl = (personControl,controlName) => {
     const { controls } = this.state;
-    controls.person = personControl;
-    console.log("person",controls);
+    controls[controlName] = personControl;
     this.setState({ controls });
   }
 
   render() {
     const { transactionData } = this.props;
     const { controls,isLoading, contacts, personName, personUuid, showPersonList } = this.state;
-    const { transactionDate, mode, type, amount, note, person } = controls;
+    const { transactionDate, mode, type, amount, note, person, debitContactName, creditContactName } = controls;
 
 
     return <Modal isOpen={this.props.show} toggle={this.props.closeModal} >
@@ -342,6 +369,20 @@ export default class AddTransaction extends Component {
         {isLoading && <CustomSpinner></CustomSpinner>}
         <Form>
           <Row>
+          <Col>
+              <FormGroup>
+                <Label for="mode">Mode</Label>
+                <div>
+                  <select name="mode" onChange={this.handleInputChange} value={mode.value}>
+                    <option value='cash'>Cash</option>
+                    {/* <option value='check'>Check</option> */}
+                    <option value='other'>Other</option>
+                    {/* <option value='stock'>Stock</option> */}
+                  </select>
+                  {mode.showErrorMsg && <div className="error">* Please enter phone number</div>}
+                </div>
+              </FormGroup>
+            </Col>
           <Col>
                 <FormGroup>
                 <Label for="password" className="field-title">Transaction Date</Label>
@@ -373,37 +414,40 @@ export default class AddTransaction extends Component {
             
           </Row>
           <Row >
-            <Col>
+            {!(mode.value === 'other' && !transactionData ) && <Col>
               <Label for="person">Contact Name</Label>
               <SearchContact 
                 ref={this.container} 
                 person={person}
+                controlName="person"
                 getSelectedPersonControl={this.getSelectedPersonControl}
               ></SearchContact>
               {person.showErrorMsg && <div className="error">* Please select person name</div>}
-
-                {/* <div ref={this.container}>
-                  <Label for="status">Contact Name</Label>
-                  <Input type="text" name="person" autoComplete="off" value={personName} onChange={this.handlePersonSearchChange.bind(this)}
-                    onFocus={this.openPersonToggle.bind(this)}></Input>
-                  {person.showErrorMsg && <div className="error">* Please select person name</div>}
-                  {showPersonList &&
-                    <div className="p-list">
-                      {contacts.map((c, i) =>
-                        <Button
-                          className="list-button"
-                          onClick={this.onSelectPerson.bind(this, c)}
-                        >
-                          {c.name}
-                        </Button>
-                      )}
-                    </div>
-                  }
-                </div> */}
-
-              </Col>
+              </Col>}
+              {mode.value === 'other' && !transactionData && <>
+                <Col>
+                  <Label for="debitContactName">Debit Contact Name</Label>
+                  <SearchContact 
+                    ref={this.debitPersoncontainer}
+                    person={debitContactName}
+                    controlName="debitContactName"
+                    getSelectedPersonControl={this.getSelectedPersonControl}
+                  ></SearchContact>
+                  {debitContactName.showErrorMsg && <div className="error">* Please select person name</div>}
+                </Col>
+                <Col>
+                  <Label for="creditContactName">Credit Contact Name</Label>
+                  <SearchContact 
+                    ref={this.creditPersonContainer} 
+                    person={creditContactName}
+                    controlName="creditContactName"
+                    getSelectedPersonControl={this.getSelectedPersonControl}
+                  ></SearchContact>
+                  {creditContactName.showErrorMsg && <div className="error">* Please select person name</div>}
+                </Col>
+              </>}
           </Row>
-          <Row className="margin-top-5">
+          {!(mode.value === 'other' && !transactionData ) && <Row className="margin-top-5">
             <Col>
               <FormGroup>
                 <Label for="type">Type</Label>
@@ -416,22 +460,9 @@ export default class AddTransaction extends Component {
                 </div>
               </FormGroup>
             </Col>
-            <Col>
-              <FormGroup>
-                <Label for="mode">Mode</Label>
-                <div>
-                  <select name="mode" onChange={this.handleInputChange} value={mode.value}>
-                    <option value='cash'>Cash</option>
-                    <option value='check'>Check</option>
-                    {/* <option value='stock'>Stock</option> */}
-                  </select>
-                  {mode.showErrorMsg && <div className="error">* Please enter phone number</div>}
-                </div>
-              </FormGroup>
-            </Col>
-          </Row>
+          </Row>}
 
-          <Row>
+          <Row className="margin-top-5">
             <Col>
               <FormGroup>
                 <Label for="amount">Amount</Label>

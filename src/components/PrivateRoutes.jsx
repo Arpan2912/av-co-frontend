@@ -9,7 +9,7 @@ import StorageService from '../services/StorageService';
 const PrivateRoutes = ({ component: Component, ...rest }) => {
   const token = StorageService.getToken();
   let isAuthenticated = false;
-  if (token) {
+  if(token) {
     isAuthenticated = true
   } else {
     isAuthenticated = false

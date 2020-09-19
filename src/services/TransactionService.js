@@ -8,28 +8,32 @@ export default class TransactionService {
     return request('POST', `${API_URL}${routes.ADD_TRANSACTION}`, null, contactObj, null)
   }
 
+  static addOtherTransaction(contactObj) {
+    return request('POST', `${API_URL}${routes.ADD_OTHER_TRANSACTION}`, null, contactObj, null)
+  }
+
   static updateTransaction(contactObj) {
     return request('POST', `${API_URL}${routes.UPDATE_TRANSACTION}`, null, contactObj, null)
   }
 
   static getTransactions(page, pageSize, search,isDownload,body,personId,mode) {
     let qp = `?`;
-    if (page) {
+    if(page) {
       qp += `page=${page}&`
     }
-    if (pageSize) {
+    if(pageSize) {
       qp += `limit=${pageSize}&`
     }
-    if (search) {
+    if(search) {
       qp += `search=${search}&`
     }
-    if (mode) {
+    if(mode) {
       qp += `mode=${mode}&`
     }
-    if (isDownload) {
+    if(isDownload) {
       qp += `downloadExcel=${isDownload}&`
     }
-    if (personId) {
+    if(personId) {
       qp += `u=${personId}&`
     }
     return request('POST', `${API_URL}${routes.GET_TRANSACTIONS}${qp}`, null, body, null)

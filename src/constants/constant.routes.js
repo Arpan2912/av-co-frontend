@@ -16,6 +16,7 @@ module.exports = {
     DELETE_STOCKS: 'stock/delete-stock',
     
     ADD_TRANSACTION: 'transaction/add-transaction',
+    ADD_OTHER_TRANSACTION: 'transaction/add-other-transaction',
     UPDATE_TRANSACTION: 'transaction/update-transaction',
     GET_TRANSACTIONS: 'transaction/get-transactions',
     GET_CLOSE_AMOUNT_TODAY: 'transaction/get-close-amount-today',

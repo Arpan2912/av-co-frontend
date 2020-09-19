@@ -14,7 +14,7 @@ export default class StockService {
 
   static deleteStock(uuid) {
     let qp = `?`;
-    if (uuid) {
+    if(uuid) {
       qp += `u=${uuid}&`
     }
     return request('DELETE', `${API_URL}${routes.DELETE_STOCKS}${qp}`, null, null, null)
@@ -22,19 +22,19 @@ export default class StockService {
 
   static getStocks(page, pageSize, search,isDownload,body,status) {
     let qp = `?`;
-    if (page) {
+    if(page) {
       qp += `page=${page}&`
     }
-    if (pageSize) {
+    if(pageSize) {
       qp += `limit=${pageSize}&`
     }
-    if (search) {
+    if(search) {
       qp += `search=${search}&`
     }
-    if (status) {
+    if(status) {
       qp += `status=${status}&`
     }
-    if (isDownload) {
+    if(isDownload) {
       qp += `downloadExcel=${isDownload}&`
     }
     return request('POST', `${API_URL}${routes.GET_STOCKS}${qp}`, null, body, null)

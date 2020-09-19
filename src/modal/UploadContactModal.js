@@ -15,7 +15,7 @@ class UploadContactModal extends Component {
         console.log("opening modal")
     }
     uploadFile = () => {
-        if (!this.state.file) {
+        if(!this.state.file) {
             this.setState({ errorMessage: 'Please select file' })
             return;
         }

@@ -100,7 +100,7 @@ export default class AddContact extends Component {
   componentDidMount() {
     const { contactData } = this.props;
     console.log("contactData", contactData);
-    if (contactData) {
+    if(contactData) {
       const { controls } = this.state;
       const { name, email, address,
         mobile1,mobile2,city,company,type
@@ -134,121 +134,121 @@ export default class AddContact extends Component {
       name
     } = controls;
 
-    if (firstTime === true || name.touched === true || isSubmit) {
+    if(firstTime === true || name.touched === true || isSubmit) {
       name = Validation.notNullValidator(name);
       name.valid = !(name.nullValue);
-      if (((isSubmit || name.touched) && name.valid === false)) {
+      if(((isSubmit || name.touched) && name.valid === false)) {
         name.showErrorMsg = true;
       } else {
         name.showErrorMsg = false;
       }
     }
 
-    // if (firstTime === true || last_name.touched === true || isSubmit) {
+    // if(firstTime === true || last_name.touched === true || isSubmit) {
     //   last_name = Validation.notNullValidator(last_name);
     //   last_name.valid = !(last_name.nullValue);
-    //   if (((isSubmit || last_name.touched) && last_name.valid === false)) {
+    //   if(((isSubmit || last_name.touched) && last_name.valid === false)) {
     //     last_name.showErrorMsg = true;
     //   } else {
     //     last_name.showErrorMsg = false;
     //   }
     // }
 
-    // if (firstTime === true || mobile1.touched === true || isSubmit) {
+    // if(firstTime === true || mobile1.touched === true || isSubmit) {
     //   // mobile1 = Validation.notNullValidator(mobile1);
     //   // mobile1.valid = !(mobile1.nullValue);
-    //   if (((isSubmit || mobile1.touched) && mobile1.valid === false)) {
+    //   if(((isSubmit || mobile1.touched) && mobile1.valid === false)) {
     //     mobile1.showErrorMsg = true;
     //   } else {
     //     mobile1.showErrorMsg = false;
     //   }
     // }
 
-    // if (firstTime === true || mobile2.touched === true || isSubmit) {
+    // if(firstTime === true || mobile2.touched === true || isSubmit) {
     //   // mobile2 = Validation.notNullValidator(mobile2);
     //   // mobile2.valid = !(mobile2.nullValue);
-    //   if (((isSubmit || mobile2.touched) && mobile2.valid === false)) {
+    //   if(((isSubmit || mobile2.touched) && mobile2.valid === false)) {
     //     mobile2.showErrorMsg = true;
     //   } else {
     //     mobile2.showErrorMsg = false;
     //   }
     // }
 
-    // if (firstTime === true || mobile3.touched === true || isSubmit) {
+    // if(firstTime === true || mobile3.touched === true || isSubmit) {
     //   // mobile3 = Validation.notNullValidator(mobile3);
     //   // mobile3.valid = !(mobile3.nullValue);
-    //   if (((isSubmit || mobile3.touched) && mobile3.valid === false)) {
+    //   if(((isSubmit || mobile3.touched) && mobile3.valid === false)) {
     //     mobile3.showErrorMsg = true;
     //   } else {
     //     mobile3.showErrorMsg = false;
     //   }
     // }
 
-    // if (firstTime === true || mobile4.touched === true || isSubmit) {
+    // if(firstTime === true || mobile4.touched === true || isSubmit) {
     //   // mobile4 = Validation.notNullValidator(mobile4);
     //   // mobile4.valid = !(mobile4.nullValue);
-    //   if (((isSubmit || mobile4.touched) && mobile4.valid === false)) {
+    //   if(((isSubmit || mobile4.touched) && mobile4.valid === false)) {
     //     mobile4.showErrorMsg = true;
     //   } else {
     //     mobile4.showErrorMsg = false;
     //   }
     // }
 
-    // if (firstTime === true || email.touched === true || isSubmit) {
+    // if(firstTime === true || email.touched === true || isSubmit) {
     //   // email = Validation.notNullValidator(email);
     //   email = Validation.emailValidator(email);
     //   email.valid = !(email.invalidEmail);
-    //   if (((isSubmit || email.touched) && email.valid === false)) {
+    //   if(((isSubmit || email.touched) && email.valid === false)) {
     //     email.showErrorMsg = true;
     //   } else {
     //     email.showErrorMsg = false;
     //   }
     // }
 
-    // if (firstTime === true || address.touched === true || isSubmit) {
+    // if(firstTime === true || address.touched === true || isSubmit) {
     //   // address = Validation.notNullValidator(address);
     //   address.valid = !(address.nullValue);
-    //   if (((isSubmit || address.touched) && address.valid === false)) {
+    //   if(((isSubmit || address.touched) && address.valid === false)) {
     //     address.showErrorMsg = true;
     //   } else {
     //     address.showErrorMsg = false;
     //   }
     // }
 
-    // if (firstTime === true || income.touched === true || isSubmit) {
+    // if(firstTime === true || income.touched === true || isSubmit) {
     //   // income = Validation.notNullValidator(income);
     //   income.valid = !(income.nullValue);
-    //   if (((isSubmit || income.touched) && income.valid === false)) {
+    //   if(((isSubmit || income.touched) && income.valid === false)) {
     //     income.showErrorMsg = true;
     //   } else {
     //     income.showErrorMsg = false;
     //   }
     // }
 
-    // if (firstTime === true || living.touched === true || isSubmit) {
+    // if(firstTime === true || living.touched === true || isSubmit) {
     //   // living = Validation.notNullValidator(living);
     //   living.valid = !(living.nullValue);
-    //   if (((isSubmit || living.touched) && living.valid === false)) {
+    //   if(((isSubmit || living.touched) && living.valid === false)) {
     //     living.showErrorMsg = true;
     //   } else {
     //     living.showErrorMsg = false;
     //   }
     // }
 
-    // if (firstTime === true || family_members.touched === true || isSubmit) {
+    // if(firstTime === true || family_members.touched === true || isSubmit) {
     //   // family_members = Validation.notNullValidator(family_members);
     //   family_members.valid = !(family_members.nullValue);
-    //   if (((isSubmit || family_members.touched) && family_members.valid === false)) {
+    //   if(((isSubmit || family_members.touched) && family_members.valid === false)) {
     //     family_members.showErrorMsg = true;
     //   } else {
     //     family_members.showErrorMsg = false;
     //   }
     // }
    
-    // if (firstTime === true || additional_detail.touched === true || isSubmit) {
+    // if(firstTime === true || additional_detail.touched === true || isSubmit) {
     //   // additional_detail = Validation.notNullValidator(additional_detail);
     //   additional_detail.valid = !(additional_detail.nullValue);
-    //   if (((isSubmit || additional_detail.touched) && additional_detail.valid === false)) {
+    //   if(((isSubmit || additional_detail.touched) && additional_detail.valid === false)) {
     //     additional_detail.showErrorMsg = true;
     //   } else {
     //     additional_detail.showErrorMsg = false;
@@ -256,7 +256,7 @@ export default class AddContact extends Component {
     // }
    
 
-    if (
+    if(
       name.valid === true 
       // last_name.valid === true &&
       // email.valid === true &&
@@ -288,11 +288,11 @@ export default class AddContact extends Component {
       mobile1,mobile2,city,company,type
     } = controls;   
 
-    if (isLoading === true) {
+    if(isLoading === true) {
       return;
     }
     const isFormValid = this.handleValidation(false, true);
-    if (isFormValid === false) {
+    if(isFormValid === false) {
       return;
     }
     console.log("controls", controls);
@@ -311,7 +311,7 @@ export default class AddContact extends Component {
     ContactService.addContact(obj)
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
-        if (message) {
+        if(message) {
           ModalService.openAlert('Person', message, 'success');
         }
         this.setState({ isLoading: false });
@@ -332,7 +332,7 @@ export default class AddContact extends Component {
       mobile1,mobile2,city,company,type
     } = controls;   
     const isFormValid = this.handleValidation(false, true);
-    if (isFormValid === false) {
+    if(isFormValid === false) {
       return;
     }
     console.log("controls", controls);
@@ -352,7 +352,7 @@ export default class AddContact extends Component {
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
         this.setState({ isLoading: false });
-        if (message) {
+        if(message) {
           ModalService.openAlert('Person', message, 'success');
         }
         this.props.closeModal(true);

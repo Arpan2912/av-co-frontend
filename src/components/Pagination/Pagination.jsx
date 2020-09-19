@@ -28,7 +28,7 @@ class Pagination extends Component {
 
   componentWillReceiveProps(newProps) {
     console.log("newProps", newProps);
-    if (newProps === this.props) return;
+    if(newProps === this.props) return;
     const { margin, page, totalRecords, pageSize } = newProps;
     const count = Math.ceil(totalRecords / pageSize);
     console.log("count", count);
@@ -63,7 +63,7 @@ class Pagination extends Component {
     const { pageSize = 10 } = this.props;
     let startPage = ((currentPage - 1) * pageSize) + 1;
     let endPage = currentPage * pageSize;
-    if (endPage > this.props.totalRecords) {
+    if(endPage > this.props.totalRecords) {
       let remainCounts = this.props.totalRecords % pageSize;
       endPage = ((currentPage - 1) * pageSize) + remainCounts;
     }
@@ -121,7 +121,7 @@ class Pagination extends Component {
         </div>
       );
 
-    if (endPage !== 1) {
+    if(endPage !== 1) {
       for (let i = startPage; i <= endPage; i++) {
         pages.push(<li
           key={i}

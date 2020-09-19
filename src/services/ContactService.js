@@ -14,16 +14,16 @@ export default class ContactService {
 
   static getContacts(page, pageSize, search,isDownload,body) {
     let qp = `?`;
-    if (page) {
+    if(page) {
       qp += `page=${page}&`
     }
-    if (pageSize) {
+    if(pageSize) {
       qp += `limit=${pageSize}&`
     }
-    if (search) {
+    if(search) {
       qp += `search=${search}&`
     }
-    if (isDownload) {
+    if(isDownload) {
       qp += `downloadExcel=${isDownload}&`
     }
     return request('POST', `${API_URL}${routes.GET_CONTACTS}${qp}`, null, body, null)

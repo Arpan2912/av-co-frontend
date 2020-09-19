@@ -106,7 +106,7 @@ class Stocks extends Component {
     closeAddStockModal = (reload) => {
         console.log("closing modal");
         this.setState({ isAddStockModalOpen: false, selectedStockToUpdate: null });
-        if (reload) {
+        if(reload) {
             this.getStocks(this.state.page);
         }
     }
@@ -149,8 +149,8 @@ class Stocks extends Component {
         const { downloadCheckbox } = controls;
         let checkBoxValue = downloadCheckbox.value;
         let valueIndex = checkBoxValue.indexOf(e);
-        if (valueIndex < 0) {
-          if ((e !== 'all' && checkBoxValue && checkBoxValue[0] === 'all') || e === 'all') {
+        if(valueIndex < 0) {
+          if((e !== 'all' && checkBoxValue && checkBoxValue[0] === 'all') || e === 'all') {
             checkBoxValue = [e];
           } else {
             checkBoxValue.push(e);

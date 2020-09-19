@@ -32,7 +32,7 @@ export default class AddContact extends Component {
   componentDidMount() {
     const { openingBalanceData } = this.props;
     console.log("openingBalanceData", openingBalanceData);
-    if (openingBalanceData) {
+    if(openingBalanceData) {
       const { controls } = this.state;
       const { amount } = controls;
       
@@ -58,17 +58,17 @@ export default class AddContact extends Component {
       amount
     } = controls;
 
-    if (firstTime === true || amount.touched === true || isSubmit) {
+    if(firstTime === true || amount.touched === true || isSubmit) {
       amount = Validation.notNullValidator(amount);
       amount.valid = !(amount.nullValue);
-      if (((isSubmit || amount.touched) && amount.valid === false)) {
+      if(((isSubmit || amount.touched) && amount.valid === false)) {
         amount.showErrorMsg = true;
       } else {
         amount.showErrorMsg = false;
       }
     }   
 
-    if (
+    if(
       amount.valid === true 
     ) {
       isFormValid = true;
@@ -86,11 +86,11 @@ export default class AddContact extends Component {
     const { controls } = this.state;
     const { amount } = controls;   
 
-    if (isLoading === true) {
+    if(isLoading === true) {
       return;
     }
     const isFormValid = this.handleValidation(false, true);
-    if (isFormValid === false) {
+    if(isFormValid === false) {
       return;
     }
     console.log("controls", controls);
@@ -102,7 +102,7 @@ export default class AddContact extends Component {
     OpeningBalanceService.addOpeningBalance(obj)
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
-        if (message) {
+        if(message) {
           ModalService.openAlert('Opening Balance', message, 'success');
         }
         this.setState({ isLoading: false });
@@ -121,7 +121,7 @@ export default class AddContact extends Component {
     const { controls } = this.state;
     const { amount } = controls;   
     const isFormValid = this.handleValidation(false, true);
-    if (isFormValid === false) {
+    if(isFormValid === false) {
       return;
     }
     console.log("controls", controls);
@@ -134,7 +134,7 @@ export default class AddContact extends Component {
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
         this.setState({ isLoading: false });
-        if (message) {
+        if(message) {
           ModalService.openAlert('Opening Balance', message, 'success');
         }
         this.props.closeModal(true);

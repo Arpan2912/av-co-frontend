@@ -115,7 +115,7 @@ export default class AddStock extends Component {
   componentDidMount() {
     const { stockData } = this.props;
     console.log("stockData", stockData);
-    if (stockData) {
+    if(stockData) {
       const { controls } = this.state;
       const { 
         stockId,buyDate,buyPrice,buyPersonId,sellDate,
@@ -167,20 +167,20 @@ export default class AddStock extends Component {
       sellPersonId,status
     } = controls;
 
-    if (firstTime === true || stockId.touched === true || isSubmit) {
+    if(firstTime === true || stockId.touched === true || isSubmit) {
       stockId = Validation.notNullValidator(stockId);
       stockId.valid = !(stockId.nullValue);
-      if (((isSubmit || stockId.touched) && stockId.valid === false)) {
+      if(((isSubmit || stockId.touched) && stockId.valid === false)) {
         stockId.showErrorMsg = true;
       } else {
         stockId.showErrorMsg = false;
       }
     }
 
-    if (firstTime === true || weight.touched === true || isSubmit) {
+    if(firstTime === true || weight.touched === true || isSubmit) {
       weight = Validation.notNullValidator(weight);
       weight.valid = !(weight.nullValue);
-      if (((isSubmit || weight.touched) && weight.valid === false)) {
+      if(((isSubmit || weight.touched) && weight.valid === false)) {
         weight.showErrorMsg = true;
       } else {
         weight.showErrorMsg = false;
@@ -188,11 +188,11 @@ export default class AddStock extends Component {
     }
 
     if(status.value === 'current-stock'){
-      if (firstTime === true || buyDate.touched === true || isSubmit) {
+      if(firstTime === true || buyDate.touched === true || isSubmit) {
         console.log("buyDate",buyDate);
         buyDate = Validation.notNullValidator(buyDate);
         buyDate.valid = !(buyDate.nullValue);
-        if (((isSubmit || buyDate.touched) && buyDate.valid === false)) {
+        if(((isSubmit || buyDate.touched) && buyDate.valid === false)) {
           buyDate.showErrorMsg = true;
         } else {
           buyDate.showErrorMsg = false;
@@ -200,20 +200,20 @@ export default class AddStock extends Component {
       }
    
 
-      if (firstTime === true || buyPrice.touched === true || isSubmit) {
+      if(firstTime === true || buyPrice.touched === true || isSubmit) {
         buyPrice = Validation.notNullValidator(buyPrice);
         buyPrice.valid = !(buyPrice.nullValue);
-        if (((isSubmit || buyPrice.touched) && buyPrice.valid === false)) {
+        if(((isSubmit || buyPrice.touched) && buyPrice.valid === false)) {
           buyPrice.showErrorMsg = true;
         } else {
           buyPrice.showErrorMsg = false;
         }
       }
 
-      if (firstTime === true || buyPersonId.touched === true || isSubmit) {
+      if(firstTime === true || buyPersonId.touched === true || isSubmit) {
         buyPersonId = Validation.notNullValidator(buyPersonId);
         buyPersonId.valid = !(buyPersonId.nullValue);
-        if (((isSubmit || buyPersonId.touched) && buyPersonId.valid === false)) {
+        if(((isSubmit || buyPersonId.touched) && buyPersonId.valid === false)) {
           buyPersonId.showErrorMsg = true;
         } else {
           buyPersonId.showErrorMsg = false;
@@ -223,20 +223,20 @@ export default class AddStock extends Component {
 
   if(status.value === 'jangad' || status.value === 'sold'){
 
-    if (firstTime === true || sellPrice.touched === true || isSubmit) {
+    if(firstTime === true || sellPrice.touched === true || isSubmit) {
       sellPrice = Validation.notNullValidator(sellPrice);
       sellPrice.valid = !(sellPrice.nullValue);
-      if (((isSubmit || sellPrice.touched) && sellPrice.valid === false)) {
+      if(((isSubmit || sellPrice.touched) && sellPrice.valid === false)) {
         sellPrice.showErrorMsg = true;
       } else {
         sellPrice.showErrorMsg = false;
       }
     }
 
-    if (firstTime === true || sellDate.touched === true || isSubmit) {
+    if(firstTime === true || sellDate.touched === true || isSubmit) {
       sellDate = Validation.notNullValidator(sellDate);
       sellDate.valid = !(sellDate.nullValue);
-      if (((isSubmit || sellDate.touched) && sellDate.valid === false)) {
+      if(((isSubmit || sellDate.touched) && sellDate.valid === false)) {
         sellDate.showErrorMsg = true;
       } else {
         sellDate.showErrorMsg = false;
@@ -245,10 +245,10 @@ export default class AddStock extends Component {
   }
 
   if(status.value === 'jangad'){
-    if (firstTime === true || sellPersonId.touched === true || isSubmit) {
+    if(firstTime === true || sellPersonId.touched === true || isSubmit) {
       sellPersonId = Validation.notNullValidator(sellPersonId);
       sellPersonId.valid = !(sellPersonId.nullValue);
-      if (((isSubmit || sellPersonId.touched) && sellPersonId.valid === false)) {
+      if(((isSubmit || sellPersonId.touched) && sellPersonId.valid === false)) {
         sellPersonId.showErrorMsg = true;
       } else {
         sellPersonId.showErrorMsg = false;
@@ -306,11 +306,11 @@ export default class AddStock extends Component {
       buyPrice,sellDate,sellPrice,sellPersonId,status,weight
     } = controls;   
 
-    if (isLoading === true) {
+    if(isLoading === true) {
       return;
     }
     const isFormValid = this.handleValidation(false, true);
-    if (isFormValid === false) {
+    if(isFormValid === false) {
       return;
     }
     let buyDateVar = null;
@@ -342,7 +342,7 @@ export default class AddStock extends Component {
     StockService.addStock(obj)
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
-        if (message) {
+        if(message) {
           ModalService.openAlert('Person', message, 'success');
         }
         this.setState({ isLoading: false });
@@ -363,7 +363,7 @@ export default class AddStock extends Component {
       buyPrice,sellDate,sellPrice,sellPersonId,status,weight
     } = controls;   
     const isFormValid = this.handleValidation(false, true);
-    if (isFormValid === false) {
+    if(isFormValid === false) {
       return;
     }
     console.log("controls", controls);
@@ -397,7 +397,7 @@ export default class AddStock extends Component {
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
         this.setState({ isLoading: false });
-        if (message) {
+        if(message) {
           ModalService.openAlert('Person', message, 'success');
         }
         this.props.closeModal(true);

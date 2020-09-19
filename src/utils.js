@@ -22,7 +22,7 @@ export function formatDate(date) {
   let month = date.getMonth() + 1;
   let year = date.getFullYear().toString();
   year = getYearString(year);
-  if (day < 10) {
+  if(day < 10) {
     day = `0` + day
   }
   month = monthObj[month];
@@ -30,7 +30,7 @@ export function formatDate(date) {
 }
 
 function getYearString(year) {
-  if (!year) {
+  if(!year) {
     year = new Date().getFullYear().toString();
   }
   return "'" + year.slice(2);

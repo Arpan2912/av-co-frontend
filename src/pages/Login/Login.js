@@ -30,7 +30,7 @@ class Login extends Component {
 
     componentDidMount() {
         const token = StorageService.getToken();
-        if (token) {
+        if(token) {
             this.props.history.push("/contact");
         }
         // this.getPerson();
@@ -54,27 +54,27 @@ class Login extends Component {
             phone, password
         } = controls;
 
-        if (firstTime === true || phone.touched === true || isSubmit) {
+        if(firstTime === true || phone.touched === true || isSubmit) {
             phone = Validation.notNullValidator(phone);
             phone.valid = !(phone.nullValue);
-            if (((isSubmit || phone.touched) && phone.valid === false)) {
+            if(((isSubmit || phone.touched) && phone.valid === false)) {
                 phone.showErrorMsg = true;
             } else {
                 phone.showErrorMsg = false;
             }
         }
 
-        if (firstTime === true || password.touched === true || isSubmit) {
+        if(firstTime === true || password.touched === true || isSubmit) {
             password = Validation.notNullValidator(password);
             password.valid = !(password.nullValue);
-            if (((isSubmit || password.touched) && password.valid === false)) {
+            if(((isSubmit || password.touched) && password.valid === false)) {
                 password.showErrorMsg = true;
             } else {
                 password.showErrorMsg = false;
             }
         }
 
-        if (
+        if(
             phone.valid === true &&
             password.valid === true
         ) {
@@ -96,7 +96,7 @@ class Login extends Component {
         const { controls } = this.state;
         const { phone, password } = controls;
         const isFormValid = this.handleValidation(false, true);
-        if (isFormValid === false) {
+        if(isFormValid === false) {
             return;
         }
         let obj = {

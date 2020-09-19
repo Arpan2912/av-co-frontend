@@ -96,7 +96,7 @@ class Transactions extends Component {
     closeAddContactModal = (reload) => {
         console.log("closing modal");
         this.setState({ isAddContactModalOpen: false, selectedContactToUpdate: null });
-        if (reload) {
+        if(reload) {
             this.getContacts(this.state.page);
         }
     }
@@ -108,7 +108,7 @@ class Transactions extends Component {
     closeAddTransactionModal = (reload) => {
         console.log("closing modal");
         this.setState({ isAddTransactionModalOpen: false, selectedTransactionToUpdate: null });
-        if (reload) {
+        if(reload) {
             this.getTransactions();
         }
     }
@@ -118,7 +118,7 @@ class Transactions extends Component {
     }
     closeUploadContactModal = (reload) => {
         this.setState({ isUploadContactModalOpen: false });
-        if (reload) {
+        if(reload) {
             this.getContacts(this.state.page);
         }
     }
@@ -145,8 +145,8 @@ class Transactions extends Component {
         const { downloadCheckbox } = controls;
         let checkBoxValue = downloadCheckbox.value;
         let valueIndex = checkBoxValue.indexOf(e);
-        if (valueIndex < 0) {
-          if ((e !== 'all' && checkBoxValue && checkBoxValue[0] === 'all') || e === 'all') {
+        if(valueIndex < 0) {
+          if((e !== 'all' && checkBoxValue && checkBoxValue[0] === 'all') || e === 'all') {
             checkBoxValue = [e];
           } else {
             checkBoxValue.push(e);
@@ -225,6 +225,7 @@ class Transactions extends Component {
                                                 <option value='cash'>Cash</option>
                                                 <option value='check'>Check</option>
                                                 <option value='stock'>Stock</option>
+                                                <option value='other'>Other</option>
                                             </select>
                                         </div>
                                     </Col>

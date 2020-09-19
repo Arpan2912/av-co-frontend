@@ -46,7 +46,7 @@ class Dashboard extends Component {
   
   closeAddOpeningBalanceModal = (reload) => {
     this.setState({ isAddOpeningBalanceModalOpen: false,selectedOpeningBalanceToUpdate:null });
-    if (reload) {
+    if(reload) {
         this.getTodayOpeningBalance();
     }
   }
@@ -153,7 +153,7 @@ class Dashboard extends Component {
   closeAddStockModal = (reload) => {
     console.log("closing modal");
     this.setState({ isAddStockModalOpen: false, selectedStockToUpdate: null });
-    // if (reload) {
+    // if(reload) {
     //     this.getStocks(this.state.page);
     // }
   }
@@ -165,7 +165,7 @@ class Dashboard extends Component {
   closeAddTransactionModal = (reload) => {
     console.log("closing modal");
     this.setState({ isAddTransactionModalOpen: false, selectedTransactionToUpdate: null });
-    // if (reload) {
+    // if(reload) {
     //     this.getTransactions();
     // }
   }

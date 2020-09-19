@@ -71,7 +71,7 @@ class Contact extends Component {
     closeAddContactModal = (reload) => {
         console.log("closing modal");
         this.setState({ isAddContactModalOpen: false, selectedContactToUpdate: null });
-        if (reload) {
+        if(reload) {
             this.getContacts(this.state.page);
         }
     }
@@ -88,7 +88,7 @@ class Contact extends Component {
     }
     closeUploadContactModal = (reload) => {
         this.setState({ isUploadContactModalOpen: false });
-        if (reload) {
+        if(reload) {
             this.getContacts(this.state.page);
         }
     }
