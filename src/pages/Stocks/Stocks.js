@@ -178,9 +178,11 @@ class Stocks extends Component {
                 <div>{formatDate(s.buy_date)}</div>
             </td>
             <td>{s.buy_price}</td>
+            <td>{s.buy_price_per}</td>
             <td>{s.sell_person_name}</td>
             <td>{s.sell_date && formatDate(s.sell_date)}</td>
             <td>{s.sell_price}</td>
+            <td>{s.sell_price_per}</td>
             <td>
               <Ionicon onClick={this.openAddStockModal.bind(this, s)} icon="md-create" fontSize="16px" color="#fdbb1f" />&nbsp;
               {!(s.sell_person_name || s.sell_date || s.sell_price) && <Ionicon onClick={this.deleteStock.bind(this, s.uuid)} icon="md-trash" fontSize="16px" color="#fdbb1f" />}
@@ -203,7 +205,7 @@ class Stocks extends Component {
                     </AddStock>}
 
                 <Row>
-                    <Col xl="10">
+                    <Col xl="12">
                         <Card>
                             <CardBody>
                                 <Row>
@@ -239,9 +241,11 @@ class Stocks extends Component {
                                             <th>Buy Contact</th>
                                             <th>Buy Date</th>
                                             <th>Buy Price</th>
+                                            <th>Buy Price Per</th>
                                             <th>Sell Contact</th>
                                             <th>Sell Date</th>
                                             <th>Sell Price</th>
+                                            <th>Sell Price per</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>

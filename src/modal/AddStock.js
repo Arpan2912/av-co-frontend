@@ -26,6 +26,18 @@ let statusDropDownOptions = [
   }
 ]
 
+let priceDropDownOptions = [
+  {
+    key:'Carat',
+    value:'carat'
+  },
+  {
+    key:'Total Price',
+    value:'total_price'
+  }
+]
+
+
 let defaultControls = {
   stockId: {
     value: '',
@@ -48,6 +60,20 @@ let defaultControls = {
   },
   weight: {
     value: null,
+    valid: null,
+    touched: false,
+    nullValue: null,
+    invalidPassword: null
+  },
+  buyPricePer: {
+    value: 'carat',
+    valid: null,
+    touched: false,
+    nullValue: null,
+    invalidPassword: null
+  },
+  sellPricePer: {
+    value: 'carat',
     valid: null,
     touched: false,
     nullValue: null,
@@ -119,7 +145,7 @@ export default class AddStock extends Component {
       const { controls } = this.state;
       const { 
         stockId,buyDate,buyPrice,buyPersonId,sellDate,
-        sellPersonId,sellPrice,status,weight
+        sellPersonId,sellPrice,status,weight,buyPricePer,sellPricePer
       } = controls;
       
       stockId.value = stockData.stock_id;
@@ -133,6 +159,8 @@ export default class AddStock extends Component {
       sellPersonId.value = stockData.sell_person_id;
       status.value = stockData.status;
       weight.value = stockData.weight;
+      buyPricePer.value=stockData.buy_price_per;
+      sellPricePer.value=stockData.sell_price_per;
       this.setState({ controls });
     }
     this.getContacts();
@@ -303,7 +331,7 @@ export default class AddStock extends Component {
   saveDetail = () => {
     const { controls } = this.state;
     const { stockId,buyDate, buyPersonId,
-      buyPrice,sellDate,sellPrice,sellPersonId,status,weight
+      buyPrice,sellDate,sellPrice,sellPersonId,status,weight,buyPricePer,sellPricePer
     } = controls;   
 
     if(isLoading === true) {
@@ -335,7 +363,9 @@ export default class AddStock extends Component {
       sellPersonId: sellPersonId.value,
       sellPrice: sellPrice.value,
       status: status.value,
-      weight:weight.value
+      weight:weight.value,
+      buyPricePer:buyPricePer.value,
+      sellPricePer:sellPricePer.value
     }
     this.setState({ isLoading: true });
     isLoading = true;
@@ -360,7 +390,7 @@ export default class AddStock extends Component {
     const { stockData} = this.props;
     const { controls } = this.state;
     const { stockId,buyDate, buyPersonId,
-      buyPrice,sellDate,sellPrice,sellPersonId,status,weight
+      buyPrice,sellDate,sellPrice,sellPersonId,status,weight,buyPricePer,sellPricePer
     } = controls;   
     const isFormValid = this.handleValidation(false, true);
     if(isFormValid === false) {
@@ -390,7 +420,9 @@ export default class AddStock extends Component {
       sellPrice: sellPrice.value,
       status: status.value,
       weight:weight.value,
-      id: stockData.uuid
+      id: stockData.uuid,
+      buyPricePer:buyPricePer.value,
+      sellPricePer:sellPricePer.value
     }
     this.setState({ isLoading: true });
     StockService.updateStock(obj)
@@ -415,7 +447,7 @@ export default class AddStock extends Component {
     const { stockData, } = this.props;
     const { controls, contacts } = this.state;
     const { stockId,buyDate, buyPersonId,
-      buyPrice,sellDate,sellPrice,sellPersonId,status,weight
+      buyPrice,sellDate,sellPrice,sellPersonId,status,weight,buyPricePer,sellPricePer
     } = controls;   
     let isUpdate = stockData && stockData.uuid ? true :false;
     return <Modal isOpen={this.props.show} toggle={this.props.closeModal} >
@@ -486,7 +518,7 @@ export default class AddStock extends Component {
             </Col>
           </Row>
           {status.value === 'current-stock' && <Row>
-            <Col>
+            <Col sm="4">
                 <FormGroup>
                 <Label for="password" className="field-title">Buy Date</Label>
                 <div>
@@ -514,7 +546,7 @@ export default class AddStock extends Component {
                 </div>
               </FormGroup>
             </Col>
-            <Col>
+            <Col sm="4">
               <FormGroup>
                 <Label for="buyPrice">Buy Price</Label>
                 <Input
@@ -525,6 +557,18 @@ export default class AddStock extends Component {
                   onChange={this.handleInputChange}
                 ></Input>
                 {buyPrice.showErrorMsg && <div className="error">* Please enter buy price</div>}
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <FormGroup>
+                <Label for="buyPricePer">Buy Price Per</Label>
+                <select name="buyPricePer" onChange={this.handleInputChange} value={buyPricePer.value}>
+                  {
+                    priceDropDownOptions.map((p,i)=>{
+                        return <option value={p.value}>{p.key}</option>
+                    })
+                  }
+                </select>
               </FormGroup>
             </Col>
             <Col>
@@ -545,7 +589,7 @@ export default class AddStock extends Component {
           </Row>}
 
           {(status.value === 'jangad' || status.value === 'sold') && <Row>
-            <Col>
+            <Col sm="4">
                 <FormGroup>
                 <Label for="password" className="field-title">Sell Date</Label>
                 <div>
@@ -573,7 +617,7 @@ export default class AddStock extends Component {
                 </div>
               </FormGroup>
             </Col>
-            {<Col>
+            <Col sm="4">
               <FormGroup>
                 <Label for="sellPrice">Sell Price</Label>
                 <Input
@@ -585,7 +629,20 @@ export default class AddStock extends Component {
                 ></Input>
                 {sellPrice.showErrorMsg && <div className="error">* Please enter sell price</div>}
               </FormGroup>
-            </Col>}
+            </Col>
+            <Col sm="4">
+              <FormGroup>
+                <Label for="sellPricePer">Price</Label>
+                <select name="sellPricePer" onChange={this.handleInputChange} value={sellPricePer.value}>
+                  {
+                    priceDropDownOptions.map((p,i)=>{
+                        return <option value={p.value}>{p.key}</option>
+                    })
+                  }
+                </select>
+              </FormGroup>
+            </Col>
+            
             <Col>
               <FormGroup>
                 <Label for="sellPersonId">Sell Contact</Label>
