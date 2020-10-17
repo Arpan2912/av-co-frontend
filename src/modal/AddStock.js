@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Row, Col, Input, Form, FormGroup, Label,InputGroup } from 'reactstrap';
+import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Row, Col, Input, Form, FormGroup, Label, InputGroup } from 'reactstrap';
 import DatePicker from 'react-datepicker';
 
 import CustomSpinner from '../components/CustomSpinner/CustomSpinner';
@@ -13,27 +13,27 @@ import ModalService from '../services/ModalService';
 let isLoading = false;
 let statusDropDownOptions = [
   {
-    key:'Current Stock',
-    value:'current-stock'
+    key: 'Current Stock',
+    value: 'current-stock'
   },
   {
-    key:'Jangad',
-    value:'jangad'
+    key: 'Jangad',
+    value: 'jangad'
   },
   {
-    key:'Sold',
-    value:'sold'
+    key: 'Sold',
+    value: 'sold'
   }
 ]
 
 let priceDropDownOptions = [
   {
-    key:'Carat',
-    value:'carat'
+    key: 'Carat',
+    value: 'carat'
   },
   {
-    key:'Total Price',
-    value:'total_price'
+    key: 'Total Price',
+    value: 'total_price'
   }
 ]
 
@@ -126,7 +126,7 @@ export default class AddStock extends Component {
 
   state = {
     controls: JSON.parse(JSON.stringify(defaultControls)),
-    contacts:[],
+    contacts: [],
     isLoading: false
   }
 
@@ -136,31 +136,31 @@ export default class AddStock extends Component {
     this.sellPersonIdContainer = React.createRef();
   }
 
- 
+
 
   componentDidMount() {
     const { stockData } = this.props;
     console.log("stockData", stockData);
-    if(stockData) {
+    if (stockData) {
       const { controls } = this.state;
-      const { 
-        stockId,buyDate,buyPrice,buyPersonId,sellDate,
-        sellPersonId,sellPrice,status,weight,buyPricePer,sellPricePer
+      const {
+        stockId, buyDate, buyPrice, buyPersonId, sellDate,
+        sellPersonId, sellPrice, status, weight, buyPricePer, sellPricePer
       } = controls;
-      
+
       stockId.value = stockData.stock_id;
       buyDate.value = new Date(stockData.buy_date);
       buyPrice.value = stockData.buy_price;
       buyPersonId.value = stockData.buy_person_id;
-      if(stockData.sell_date){
+      if (stockData.sell_date) {
         sellDate.value = new Date(stockData.sell_date);
       }
       sellPrice.value = stockData.sell_price;
       sellPersonId.value = stockData.sell_person_id;
       status.value = stockData.status;
       weight.value = stockData.weight;
-      buyPricePer.value=stockData.buy_price_per;
-      sellPricePer.value=stockData.sell_price_per;
+      buyPricePer.value = stockData.buy_price_per;
+      sellPricePer.value = stockData.sell_price_per;
       this.setState({ controls });
     }
     this.getContacts();
@@ -189,59 +189,59 @@ export default class AddStock extends Component {
 
   handleValidation = (firstTime, isSubmit) => {
     let { controls } = this.state;
-    let { 
-      stockId,weight,buyDate,buyPrice,
-      sellDate,sellPrice,buyPersonId,
-      sellPersonId,status
+    let {
+      stockId, weight, buyDate, buyPrice,
+      sellDate, sellPrice, buyPersonId,
+      sellPersonId, status
     } = controls;
 
-    if(firstTime === true || stockId.touched === true || isSubmit) {
+    if (firstTime === true || stockId.touched === true || isSubmit) {
       stockId = Validation.notNullValidator(stockId);
       stockId.valid = !(stockId.nullValue);
-      if(((isSubmit || stockId.touched) && stockId.valid === false)) {
+      if (((isSubmit || stockId.touched) && stockId.valid === false)) {
         stockId.showErrorMsg = true;
       } else {
         stockId.showErrorMsg = false;
       }
     }
 
-    if(firstTime === true || weight.touched === true || isSubmit) {
+    if (firstTime === true || weight.touched === true || isSubmit) {
       weight = Validation.notNullValidator(weight);
       weight.valid = !(weight.nullValue);
-      if(((isSubmit || weight.touched) && weight.valid === false)) {
+      if (((isSubmit || weight.touched) && weight.valid === false)) {
         weight.showErrorMsg = true;
       } else {
         weight.showErrorMsg = false;
       }
     }
 
-    if(status.value === 'current-stock'){
-      if(firstTime === true || buyDate.touched === true || isSubmit) {
-        console.log("buyDate",buyDate);
+    if (status.value === 'current-stock') {
+      if (firstTime === true || buyDate.touched === true || isSubmit) {
+        console.log("buyDate", buyDate);
         buyDate = Validation.notNullValidator(buyDate);
         buyDate.valid = !(buyDate.nullValue);
-        if(((isSubmit || buyDate.touched) && buyDate.valid === false)) {
+        if (((isSubmit || buyDate.touched) && buyDate.valid === false)) {
           buyDate.showErrorMsg = true;
         } else {
           buyDate.showErrorMsg = false;
         }
       }
-   
 
-      if(firstTime === true || buyPrice.touched === true || isSubmit) {
+
+      if (firstTime === true || buyPrice.touched === true || isSubmit) {
         buyPrice = Validation.notNullValidator(buyPrice);
         buyPrice.valid = !(buyPrice.nullValue);
-        if(((isSubmit || buyPrice.touched) && buyPrice.valid === false)) {
+        if (((isSubmit || buyPrice.touched) && buyPrice.valid === false)) {
           buyPrice.showErrorMsg = true;
         } else {
           buyPrice.showErrorMsg = false;
         }
       }
 
-      if(firstTime === true || buyPersonId.touched === true || isSubmit) {
+      if (firstTime === true || buyPersonId.touched === true || isSubmit) {
         buyPersonId = Validation.notNullValidator(buyPersonId);
         buyPersonId.valid = !(buyPersonId.nullValue);
-        if(((isSubmit || buyPersonId.touched) && buyPersonId.valid === false)) {
+        if (((isSubmit || buyPersonId.touched) && buyPersonId.valid === false)) {
           buyPersonId.showErrorMsg = true;
         } else {
           buyPersonId.showErrorMsg = false;
@@ -249,108 +249,108 @@ export default class AddStock extends Component {
       }
     }
 
-  if(status.value === 'jangad' || status.value === 'sold'){
+    if (status.value === 'jangad' || status.value === 'sold') {
 
-    if(firstTime === true || sellPrice.touched === true || isSubmit) {
-      sellPrice = Validation.notNullValidator(sellPrice);
-      sellPrice.valid = !(sellPrice.nullValue);
-      if(((isSubmit || sellPrice.touched) && sellPrice.valid === false)) {
-        sellPrice.showErrorMsg = true;
-      } else {
-        sellPrice.showErrorMsg = false;
+      if (firstTime === true || sellPrice.touched === true || isSubmit) {
+        sellPrice = Validation.notNullValidator(sellPrice);
+        sellPrice.valid = !(sellPrice.nullValue);
+        if (((isSubmit || sellPrice.touched) && sellPrice.valid === false)) {
+          sellPrice.showErrorMsg = true;
+        } else {
+          sellPrice.showErrorMsg = false;
+        }
+      }
+
+      if (firstTime === true || sellDate.touched === true || isSubmit) {
+        sellDate = Validation.notNullValidator(sellDate);
+        sellDate.valid = !(sellDate.nullValue);
+        if (((isSubmit || sellDate.touched) && sellDate.valid === false)) {
+          sellDate.showErrorMsg = true;
+        } else {
+          sellDate.showErrorMsg = false;
+        }
       }
     }
 
-    if(firstTime === true || sellDate.touched === true || isSubmit) {
-      sellDate = Validation.notNullValidator(sellDate);
-      sellDate.valid = !(sellDate.nullValue);
-      if(((isSubmit || sellDate.touched) && sellDate.valid === false)) {
-        sellDate.showErrorMsg = true;
-      } else {
-        sellDate.showErrorMsg = false;
-      }
-    } 
-  }
-
-  if(status.value === 'jangad'){
-    if(firstTime === true || sellPersonId.touched === true || isSubmit) {
-      sellPersonId = Validation.notNullValidator(sellPersonId);
-      sellPersonId.valid = !(sellPersonId.nullValue);
-      if(((isSubmit || sellPersonId.touched) && sellPersonId.valid === false)) {
-        sellPersonId.showErrorMsg = true;
-      } else {
-        sellPersonId.showErrorMsg = false;
+    if (status.value === 'jangad') {
+      if (firstTime === true || sellPersonId.touched === true || isSubmit) {
+        sellPersonId = Validation.notNullValidator(sellPersonId);
+        sellPersonId.valid = !(sellPersonId.nullValue);
+        if (((isSubmit || sellPersonId.touched) && sellPersonId.valid === false)) {
+          sellPersonId.showErrorMsg = true;
+        } else {
+          sellPersonId.showErrorMsg = false;
+        }
       }
     }
-  }
-  let isFormValid = stockId.valid && weight.valid;
-  if(status.value === 'current-stock'){
-    isFormValid = isFormValid && buyPersonId.valid && buyPrice.valid && buyDate.valid
-  }
-  if(status.value === 'jangad' || status.value === 'sold'){
-    isFormValid = isFormValid && sellPrice.valid && sellDate.valid
-  }
-  if(status.value === 'jangad'){
-    isFormValid = isFormValid && sellPersonId.valid 
-  }
-  console.log("isFormValid",isFormValid);
-  console.log("controls", controls);
+    let isFormValid = stockId.valid && weight.valid;
+    if (status.value === 'current-stock') {
+      isFormValid = isFormValid && buyPersonId.valid && buyPrice.valid && buyDate.valid
+    }
+    if (status.value === 'jangad' || status.value === 'sold') {
+      isFormValid = isFormValid && sellPrice.valid && sellDate.valid
+    }
+    if (status.value === 'jangad') {
+      isFormValid = isFormValid && sellPersonId.valid
+    }
+    console.log("isFormValid", isFormValid);
+    console.log("controls", controls);
     // console.log('controls', controls);
     // console.log('isFormValid', isBusinessFormValid);
-  this.setState({ controls, isFormValid });
-  return isFormValid;
+    this.setState({ controls, isFormValid });
+    return isFormValid;
   }
 
   getSelectedBuyPersonControl = (personControl) => {
     const { controls } = this.state;
     controls.buyPersonId = personControl;
-    console.log("person",controls);
+    console.log("person", controls);
     this.setState({ controls });
   }
 
   getSelectedSellPersonControl = (personControl) => {
     const { controls } = this.state;
     controls.sellPersonId = personControl;
-    console.log("person",controls);
+    console.log("person", controls);
     this.setState({ controls });
   }
 
-  getContacts = () =>{
-    ContactService.getContacts(1,10,null,false)
-      .then(data=>{
-        console.log("data",data);
-        if(data.data && data.data.data && data.data.data.contacts){
-          this.setState({ contacts : data.data.data.contacts })
+  getContacts = () => {
+    ContactService.getContacts(1, 10, null, false)
+      .then(data => {
+        console.log("data", data);
+        if (data.data && data.data.data && data.data.data.contacts) {
+          this.setState({ contacts: data.data.data.contacts })
         }
       })
-      .catch(e=>{
-        console.log("e",e);
+      .catch(e => {
+        console.log("e", e);
       })
   }
 
   saveDetail = () => {
     const { controls } = this.state;
-    const { stockId,buyDate, buyPersonId,
-      buyPrice,sellDate,sellPrice,sellPersonId,status,weight,buyPricePer,sellPricePer
-    } = controls;   
+    const { stockId, buyDate, buyPersonId,
+      buyPrice, sellDate, sellPrice, sellPersonId, status, weight, buyPricePer, sellPricePer
+    } = controls;
 
-    if(isLoading === true) {
+    if (isLoading === true) {
       return;
     }
     const isFormValid = this.handleValidation(false, true);
-    if(isFormValid === false) {
+    if (isFormValid === false) {
       return;
     }
     let buyDateVar = null;
     let sellDateVar = null;
-    if(buyDate.value){
-      buyDate.value.setHours(5,30,0,0);
-      console.log("buyDate",buyDate);
+    if (buyDate.value) {
+      buyDate.value.setHours(5, 30, 0, 0);
+      console.log("buyDate", buyDate);
       buyDateVar = buyDate.value.toISOString();
     }
-    if(sellDate.value){
-      sellDate.value.setHours(5,30,0,0);
-      console.log("sellDate",sellDate);
+    if (sellDate.value) {
+      sellDate.value.setHours(5, 30, 0, 0);
+      console.log("sellDate", sellDate);
       sellDateVar = sellDate.value.toISOString();
     }
     console.log("controls", controls);
@@ -363,16 +363,16 @@ export default class AddStock extends Component {
       sellPersonId: sellPersonId.value,
       sellPrice: sellPrice.value,
       status: status.value,
-      weight:weight.value,
-      buyPricePer:buyPricePer.value,
-      sellPricePer:sellPricePer.value
+      weight: weight.value,
+      buyPricePer: buyPricePer.value,
+      sellPricePer: sellPricePer.value
     }
     this.setState({ isLoading: true });
     isLoading = true;
     StockService.addStock(obj)
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
-        if(message) {
+        if (message) {
           ModalService.openAlert('Person', message, 'success');
         }
         this.setState({ isLoading: false });
@@ -387,49 +387,49 @@ export default class AddStock extends Component {
   }
 
   updateStock = () => {
-    const { stockData} = this.props;
+    const { stockData } = this.props;
     const { controls } = this.state;
-    const { stockId,buyDate, buyPersonId,
-      buyPrice,sellDate,sellPrice,sellPersonId,status,weight,buyPricePer,sellPricePer
-    } = controls;   
+    const { stockId, buyDate, buyPersonId,
+      buyPrice, sellDate, sellPrice, sellPersonId, status, weight, buyPricePer, sellPricePer
+    } = controls;
     const isFormValid = this.handleValidation(false, true);
-    if(isFormValid === false) {
+    if (isFormValid === false) {
       return;
     }
     console.log("controls", controls);
     let buyDateVar = null;
     let sellDateVar = null;
-    if(buyDate.value){
-      buyDate.value.setHours(5,30,0,0);
-      console.log("buyDate",buyDate);
+    if (buyDate.value) {
+      buyDate.value.setHours(5, 30, 0, 0);
+      console.log("buyDate", buyDate);
       buyDateVar = buyDate.value.toISOString();
     }
-    if(sellDate.value){
-      sellDate.value.setHours(5,30,0,0);
-      console.log("sellDate",sellDate);
+    if (sellDate.value) {
+      sellDate.value.setHours(5, 30, 0, 0);
+      console.log("sellDate", sellDate);
       sellDateVar = sellDate.value.toISOString();
     }
 
     let obj = {
       stockId: stockId.value,
-      buyDate:buyDateVar,
+      buyDate: buyDateVar,
       buyPersonId: buyPersonId.value,
       buyPrice: buyPrice.value,
       sellDate: sellDateVar,
       sellPersonId: sellPersonId.value,
       sellPrice: sellPrice.value,
       status: status.value,
-      weight:weight.value,
+      weight: weight.value,
       id: stockData.uuid,
-      buyPricePer:buyPricePer.value,
-      sellPricePer:sellPricePer.value
+      buyPricePer: buyPricePer.value,
+      sellPricePer: sellPricePer.value
     }
     this.setState({ isLoading: true });
     StockService.updateStock(obj)
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
         this.setState({ isLoading: false });
-        if(message) {
+        if (message) {
           ModalService.openAlert('Person', message, 'success');
         }
         this.props.closeModal(true);
@@ -446,10 +446,10 @@ export default class AddStock extends Component {
   render() {
     const { stockData, } = this.props;
     const { controls, contacts } = this.state;
-    const { stockId,buyDate, buyPersonId,
-      buyPrice,sellDate,sellPrice,sellPersonId,status,weight,buyPricePer,sellPricePer
-    } = controls;   
-    let isUpdate = stockData && stockData.uuid ? true :false;
+    const { stockId, buyDate, buyPersonId,
+      buyPrice, sellDate, sellPrice, sellPersonId, status, weight, buyPricePer, sellPricePer
+    } = controls;
+    let isUpdate = stockData && stockData.uuid ? true : false;
     return <Modal isOpen={this.props.show} toggle={this.props.closeModal} >
       <ModalHeader toggle={this.props.closeModal}>Add Stock</ModalHeader>
       <ModalBody>
@@ -498,28 +498,29 @@ export default class AddStock extends Component {
               </FormGroup>
             </Col> */}
           </Row>
-         
+
           <Row>
             <Col>
               <FormGroup>
                 <Label for="status">Status</Label>
                 <select name="status" onChange={this.handleInputChange} value={status.value}>
-                  {statusDropDownOptions.map((s,i)=>{
-                    if(!isUpdate){
-                      if(i===0){
+                  {statusDropDownOptions.map((s, i) => {
+                    if (!isUpdate) {
+                      if (i === 0) {
                         return <option value={s.value}>{s.key}</option>
                       }
                     } else {
                       return <option value={s.value}>{s.key}</option>
                     }
-                })}
+                  })}
                 </select>
               </FormGroup>
             </Col>
           </Row>
-          {status.value === 'current-stock' && <Row>
+          {/* {status.value === 'current-stock' && <Row> */}
+          {<Row>
             <Col sm="4">
-                <FormGroup>
+              <FormGroup>
                 <Label for="password" className="field-title">Buy Date</Label>
                 <div>
                   <Label className="width-100"
@@ -564,8 +565,8 @@ export default class AddStock extends Component {
                 <Label for="buyPricePer">Buy Price Per</Label>
                 <select name="buyPricePer" onChange={this.handleInputChange} value={buyPricePer.value}>
                   {
-                    priceDropDownOptions.map((p,i)=>{
-                        return <option value={p.value}>{p.key}</option>
+                    priceDropDownOptions.map((p, i) => {
+                      return <option value={p.value}>{p.key}</option>
                     })
                   }
                 </select>
@@ -574,8 +575,8 @@ export default class AddStock extends Component {
             <Col>
               <FormGroup>
                 <Label for="buyPersonId">Buy Contact</Label>
-                <SearchContact 
-                  ref={this.buyPersonIdContainer} 
+                <SearchContact
+                  ref={this.buyPersonIdContainer}
                   person={buyPersonId}
                   getSelectedPersonControl={this.getSelectedBuyPersonControl}
                 ></SearchContact>
@@ -588,9 +589,10 @@ export default class AddStock extends Component {
             </Col>
           </Row>}
 
-          {(status.value === 'jangad' || status.value === 'sold') && <Row>
+          {status.value !== 'current-stock' && <Row>
+            {/* {(status.value === 'jangad' || status.value === 'sold') && <Row> */}
             <Col sm="4">
-                <FormGroup>
+              <FormGroup>
                 <Label for="password" className="field-title">Sell Date</Label>
                 <div>
                   <Label className="width-100"
@@ -635,19 +637,19 @@ export default class AddStock extends Component {
                 <Label for="sellPricePer">Price</Label>
                 <select name="sellPricePer" onChange={this.handleInputChange} value={sellPricePer.value}>
                   {
-                    priceDropDownOptions.map((p,i)=>{
-                        return <option value={p.value}>{p.key}</option>
+                    priceDropDownOptions.map((p, i) => {
+                      return <option value={p.value}>{p.key}</option>
                     })
                   }
                 </select>
               </FormGroup>
             </Col>
-            
+
             <Col>
               <FormGroup>
                 <Label for="sellPersonId">Sell Contact</Label>
-                <SearchContact 
-                  ref={this.sellPersonIdContainer} 
+                <SearchContact
+                  ref={this.sellPersonIdContainer}
                   person={sellPersonId}
                   getSelectedPersonControl={this.getSelectedSellPersonControl}
                 ></SearchContact>
@@ -660,8 +662,8 @@ export default class AddStock extends Component {
             </Col>
           </Row>}
 
-          
-          <Button onClick={stockData ? this.updateStock: this.saveDetail}>
+
+          <Button onClick={stockData ? this.updateStock : this.saveDetail}>
             Save
           </Button>
         </Form>
