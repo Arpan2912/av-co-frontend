@@ -24,6 +24,20 @@ export default class StorageService {
   static removeUserDetail() {
     return localStorage.removeItem("user");
   }
+
+  static setCompanyDetail(detail) {
+    const user = JSON.stringify(detail);
+    localStorage.setItem("company", user);
+  }
+
+  static getCompanyDetail() {
+    const user = localStorage.getItem("company");
+    return JSON.parse(user);
+  }
+
+  static removeCompanyDetail() {
+    return localStorage.removeItem("company");
+  }
 }
 
 

@@ -1,4 +1,4 @@
-import { UPDATE_HEADER_MENUS } from '../constants/action-type';
+import { UPDATE_HEADER_MENUS, UPDATE_COMAPANY_DETAIL } from '../constants/action-type';
 
 const initialState = {
     header: null,
@@ -10,6 +10,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 header: action.payload,
+            };
+
+        case UPDATE_COMAPANY_DETAIL:
+            return {
+                ...state,
+                companyDetail: action.payload,
             };
 
         default:

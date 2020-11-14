@@ -112,7 +112,7 @@ class Login extends Component {
                 StorageService.setUserDetail(userObj);
                 StorageService.setToken(token);
                 this.props.updateHeaderMenus("login");
-                this.props.history.push("/home");
+                this.props.history.push("/company");
                 //         this.getPerson();
                 //         this.resetControls();
             })

@@ -21,6 +21,7 @@ class Logout extends Component {
 
     logout = () => {
         StorageService.removeToken();
+        StorageService.removeCompanyDetail();
         this.props.updateHeaderMenus("logout");
         this.props.history.push("/");
     }
