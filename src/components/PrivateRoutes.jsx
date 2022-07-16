@@ -9,27 +9,37 @@ import StorageService from '../services/StorageService';
 const PrivateRoutes = ({ component: Component, ...rest }) => {
   const token = StorageService.getToken();
   let isAuthenticated = false;
-  if(token) {
+  let isCompanySelected = true;
+  if (token) {
     isAuthenticated = true
   } else {
     isAuthenticated = false
 
   }
-
+  const compnayDetail = StorageService.getCompanyDetail();
+  if (!compnayDetail && rest.path !== '/company') {
+    isCompanySelected = false;
+  }
   return (
     <Route
       {...rest}
-      render={props =>
-        // if user is authenticated successfully then redirect to component or
-        // redirect to login page
-        (
-          isAuthenticated === true
-            ? <Component {...props} />
-            : <Redirect to={{
-              pathname: '/',
+      render={props => {
+        if (isAuthenticated === true) {
+          if (isCompanySelected) {
+            return <Component {...props} />
+          } else {
+            return <Redirect to={{
+              pathname: '/company',
             }}
             />
-        )
+          }
+        } else {
+          return <Redirect to={{
+            pathname: '/',
+          }}
+          />
+        }
+      }
 
       }
     />

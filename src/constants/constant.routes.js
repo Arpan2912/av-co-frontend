@@ -26,6 +26,10 @@ module.exports = {
     GET_TODAY_OPENING_BALANCE: 'opening-balance/get-today-opening-balance',
 
     GET_STOCK_AND_AMT_WITH_DALAL: 'dashboard/get-stock-and-amount-with-dalal',
-    GET_ACCOUNT_SUMMARY:'dashboard/get-account-summary'
+    GET_ACCOUNT_SUMMARY:'dashboard/get-account-summary',
+
+    ADD_COMPANY: 'company/add-company',
+    UPDATE_COMPANY: 'company/update-company',
+    GET_COMPANIES: 'company/get-company',
   }
 }

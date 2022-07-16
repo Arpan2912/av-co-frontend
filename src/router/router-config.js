@@ -8,6 +8,7 @@ import Contact from '../pages/Contact/Contact';
 import Stocks from '../pages/Stocks/Stocks';
 import Transactions from '../pages/Transactions/Transactions';
 import Dashboard from '../pages/Dashboard/Dashboard';
+import Company from '../pages/Company/Company';
 // Lazy loading sample code
 // const Home = Loadable({
 //   loader: () => import(/* webpackChunkName: "home" */ '../containers/Home'),
@@ -36,6 +37,12 @@ export const privateRouteObj = [
     path: '/contact',
     component: Contact,
     key: 'contact',
+  },
+  {
+    exact: true,
+    path: '/company',
+    component: Company,
+    key: 'company',
   },
   {
     exact: true,

@@ -13,10 +13,16 @@ export const request = (method, url, params, body = {}, headers = {}) => {
   headers = headers || {};
   params = params || {};
   body = body || {};
-  if(!headers['content-type']) {
+  const companyDetail = Storage.getCompanyDetail();
+  let companyId = null;
+  if (companyDetail) {
+    companyId = companyDetail.uuid
+    headers['company-id'] = companyId;
+  }
+  if (!headers['content-type']) {
     headers['content-type'] = 'application/json';
   }
-  if(!(url === 'signin' || url === 'signup' || url === 'forgot-password')) {
+  if (!(url === 'signin' || url === 'signup' || url === 'forgot-password')) {
     const token = Storage.getToken();
     headers.Authorization = `Bearer ${token}`;
     // headers.Authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1X3V1aWQiOiJkNjhiYjU3Zi0zOGY0LTQxOGUtYmIzNy0yMzJmOGQzMDg3MDciLCJmaXJzdF9uYW1lIjoibmlrdW5qIiwibGFzdF9uYW1lIjoiUHJhIiwiZW1haWwiOiJuaWt1bmpAbWFpbGluYXRvci5jb20iLCJmYklkIjpudWxsLCJpZCI6NCwidXNlclR5cGUiOjIsImlhdCI6MTUzMTg5NjMzNH0.g2cvqz_CeBWfaBkAwQwe5B-wy-iM2QlTruF27APva6Q';
@@ -28,9 +34,9 @@ export const request = (method, url, params, body = {}, headers = {}) => {
     url,
   };
 
-  if((method === 'POST' || method === 'PUT') && headers['content-type'] === 'application/x-www-form-urlencoded') {
+  if ((method === 'POST' || method === 'PUT') && headers['content-type'] === 'application/x-www-form-urlencoded') {
     options.data = qs.stringify(body);
-  } else if((method === 'POST' || method === 'PUT') && headers['content-type'] === 'multipart/form-data') {
+  } else if ((method === 'POST' || method === 'PUT') && headers['content-type'] === 'multipart/form-data') {
     headers['content-type'] = 'multipart/form-data';
 
     // prepate multipart formdata body 
@@ -41,7 +47,7 @@ export const request = (method, url, params, body = {}, headers = {}) => {
     }
     options.data = formData;
     // options.data = qs.stringify(body);
-  } else if((method === 'POST' || method === 'PUT')) {
+  } else if ((method === 'POST' || method === 'PUT')) {
     options.data = body;
   }
 
