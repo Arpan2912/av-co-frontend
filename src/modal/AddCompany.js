@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, useEffect, useState } from 'react';
 import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Row, Col, Input, Form, FormGroup, Label } from 'reactstrap';
 
 import CustomSpinner from '../components/CustomSpinner/CustomSpinner';
@@ -43,46 +43,47 @@ let defaultControls = {
     invalidPassword: null
   },
 }
-export default class AddCompany extends Component {
+const AddCompany = ({ companyData, closeModal, show }) => {
+  const [controls, setControls] = useState({ ...defaultControls });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+  // state = {
+  //   controls: JSON.parse(JSON.stringify(defaultControls)),
+  //   isLoading: false
+  // }
 
-  state = {
-    controls: JSON.parse(JSON.stringify(defaultControls)),
-    isLoading: false
-  }
-
-  constructor() {
-    super();
-  }
-
-
-  componentDidMount() {
-    const { companyData } = this.props;
+  useEffect(() => {
+    console.log("use effect called");
+    // const { companyData } = props;
+    console.log("companyData", companyData)
     if (companyData) {
-      const { controls } = this.state;
+      // const { controls } = this.state;
       const { company_name, phone } = controls;
 
       company_name.value = companyData.company_name;
       phone.value = companyData.phone;
-      this.setState({ controls });
+      setControls({...controls});
+      // this.setState({ controls });
     }
-  }
+  }, [])
 
-  handleInputChange = (e) => {
+  const handleInputChange = (e) => {
     const controlName = e.target.name;
     const controlValue = e.target.value;
-    const { controls } = this.state;
+    // const { controls } = this.state;
     controls[controlName].value = controlValue;
     controls[controlName].touched = true;
-    this.setState({ controls });
+    setControls({ ...controls });
+    // this.setState({ controls });
     // this.handleValidation();
   }
 
-  handleValidation = (firstTime, isSubmit) => {
-    let { controls, isFormValid } = this.state;
+  const handleValidation = (firstTime, isSubmit) => {
+    // let { controls, isFormValid } = this.state;
     let {
       company_name
     } = controls;
-
+    let isFormValid = false;
     if (firstTime === true || company_name.touched === true || isSubmit) {
       company_name = Validation.notNullValidator(company_name);
       company_name.valid = !(company_name.nullValue);
@@ -92,9 +93,6 @@ export default class AddCompany extends Component {
         company_name.showErrorMsg = false;
       }
     }
-
-
-
 
     if (
       company_name.valid === true
@@ -107,18 +105,20 @@ export default class AddCompany extends Component {
     console.log("controls", controls);
     // console.log('controls', controls);
     // console.log('isFormValid', isBusinessFormValid);
-    this.setState({ controls, isFormValid });
+    setControls({ ...controls });
+    setIsFormValid(isFormValid);
+    // this.setState({ controls, isFormValid });
     return isFormValid;
   }
 
-  saveDetail = () => {
-    const { controls } = this.state;
+  const saveDetail = () => {
+    // const { controls } = this.state;
     const { company_name, phone } = controls;
 
     if (isLoading === true) {
       return;
     }
-    const isFormValid = this.handleValidation(false, true);
+    const isFormValid = handleValidation(false, true);
     if (isFormValid === false) {
       return;
     }
@@ -126,30 +126,33 @@ export default class AddCompany extends Component {
       companyName: company_name.value,
       phone: phone.value,
     }
-    this.setState({ isLoading: true });
-    isLoading = true;
+    setIsLoading(true);
+    // this.setState({ isLoading: true });
+    // isLoading = true;
     CompanyService.addCompany(obj)
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
         if (message) {
           ModalService.openAlert('Company', message, 'success');
         }
-        this.setState({ isLoading: false });
-        isLoading = false;
-        this.props.closeModal(true);
+        setIsLoading(false);
+        // this.setState({ isLoading: false });
+        // isLoading = false;
+        closeModal(true);
         // this.resetControls();
       })
       .catch(e => {
-        this.setState({ isLoading: false });
-        isLoading = false;
+        setIsLoading(false);
+        // this.setState({ isLoading: false });
+        // isLoading = false;
       })
   }
 
-  updateCompany = () => {
-    const { companyData } = this.props;
-    const { controls } = this.state;
+  const updateCompany = () => {
+    // const { companyData } = props;
+    // const { controls } = this.state;
     const { company_name, phone } = controls;
-    const isFormValid = this.handleValidation(false, true);
+    const isFormValid = handleValidation(false, true);
     if (isFormValid === false) {
       return;
     }
@@ -159,76 +162,79 @@ export default class AddCompany extends Component {
       phone: phone.value,
       companyId: companyData.uuid
     }
-    this.setState({ isLoading: true });
+    setIsLoading(true);
+
+    // this.setState({ isLoading: true });
     CompanyService.updateCompany(obj)
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
-        this.setState({ isLoading: false });
+        setIsLoading(false);
+        // this.setState({ isLoading: false });
         if (message) {
           ModalService.openAlert('Company', message, 'success');
         }
-        this.props.closeModal(true);
+        closeModal(true);
         // this.getPerson();
         // this.resetControls();
       })
       .catch(e => {
+        setIsLoading(false);
         console.log("e", e);
-        this.setState({ isLoading: false });
+        // this.setState({ isLoading: false });
         const message = e.response && e.response.data && e.response.data.message ? e.response.data.message : 'Something went wrong';
         ModalService.openAlert('Person', message, 'error');
       })
   }
 
-  render() {
-    const { companyData } = this.props;
-    const { controls, isLoading } = this.state;
-    const { company_name, phone } = controls;
+  // render() {
+  // const { companyData } = props;
+  // const { controls, isLoading } = this.state;
+  const { company_name, phone } = controls;
 
+  return <Modal isOpen={show} toggle={closeModal} >
+    <ModalHeader toggle={closeModal}>{companyData ? 'Update' : 'Add'} Company</ModalHeader>
+    <ModalBody>
+      {isLoading && <CustomSpinner></CustomSpinner>}
+      <Form>
+        <Row>
+          <Col>
+            <FormGroup>
+              <Label for="company_name">Company Name</Label>
+              <Input
+                type="text"
+                id="company_name"
+                name="company_name"
+                value={company_name.value}
+                onChange={handleInputChange}
+              ></Input>
+              {company_name.showErrorMsg && <div className="error">* Please enter name</div>}
 
-    return <Modal isOpen={this.props.show} toggle={this.props.closeModal} >
-      <ModalHeader toggle={this.props.closeModal}>{companyData ? 'Update' : 'Add'} Company</ModalHeader>
-      <ModalBody>
-        {isLoading && <CustomSpinner></CustomSpinner>}
-        <Form>
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="company_name">Company Name</Label>
-                <Input
-                  type="text"
-                  id="company_name"
-                  name="company_name"
-                  value={company_name.value}
-                  onChange={this.handleInputChange}
-                ></Input>
-                {company_name.showErrorMsg && <div className="error">* Please enter name</div>}
+            </FormGroup>
+          </Col>
 
-              </FormGroup>
-            </Col>
+        </Row>
+        <Row>
+          <Col>
+            <FormGroup>
+              <Label for="phone">Phone</Label>
+              <Input
+                type="number"
+                id="phone"
+                name="phone"
+                value={phone.value}
+                onChange={handleInputChange}
+              ></Input>
+              {phone.showErrorMsg && <div className="error">* Please enter phone number</div>}
+            </FormGroup>
+          </Col>
 
-          </Row>
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="phone">Phone</Label>
-                <Input
-                  type="number"
-                  id="phone"
-                  name="phone"
-                  value={phone.value}
-                  onChange={this.handleInputChange}
-                ></Input>
-                {phone.showErrorMsg && <div className="error">* Please enter phone number</div>}
-              </FormGroup>
-            </Col>
+        </Row>
+        <Button className='logout-button' onClick={companyData ? updateCompany : saveDetail}>
+          Save
+        </Button>
+      </Form>
+    </ModalBody>
 
-          </Row>
-          <Button onClick={companyData ? this.updateCompany : this.saveDetail}>
-            Save
-          </Button>
-        </Form>
-      </ModalBody>
-
-    </Modal>
-  }
+  </Modal>
 }
+export default AddCompany;

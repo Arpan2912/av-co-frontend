@@ -67,5 +67,5 @@ export function showErrorMsg(title,e){
   if(e && e.response && e.response.data && e.response.data.message){
       msg = e.response.data.message;
   }
-  ModalService.openAlert(title,msg,'failure');
+  ModalService.openAlert(title,msg,'error');
 }

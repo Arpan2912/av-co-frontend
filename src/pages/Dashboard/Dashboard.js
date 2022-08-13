@@ -1,265 +1,253 @@
-import React, { Component } from 'react';
-import { Card, CardBody, Row, Col,Input, Table } from 'reactstrap';
+import React, { useEffect, useState } from 'react';
+import { Card, CardBody, Row, Col, Input, Table } from 'reactstrap';
 import Ionicon from 'react-ionicons';
 
+// components
 import Pagination from '../../components/Pagination/Pagination';
+import CustomSpinner from '../../components/CustomSpinner/CustomSpinner';
 
+// services
 import OpeningBalanceService from '../../services/OpeningBalanceService';
 import TransactionService from '../../services/TransactionService';
 import DashboardService from '../../services/DashboardService';
 
+// modals
 import AddStock from '../../modal/AddStock';
 import AddOpeningBalance from '../../modal/AddOpeningBalance';
 import AddTransaction from '../../modal/AddTransaction';
 
-class Dashboard extends Component {
-  state = {
-    isAddOpeningBalanceModalOpen: false,
-    isAddOpeningBalanceButtonVisible:false,
-    openingBalanceData:{},
-    selectedOpeningBalanceToUpdate: null,
-    closingBalanceData:{},
-    dalalData: [],
-    searchDalal: null,
-    pageDalal: 1,
-    pageSizeDalal: 10,
-    totalDalals:0,
-    pageAccountSummary: 1,
-    pageSizeAccountSummary: 10,
-    totalAccountSummary:0,
-    searchAccountSummary: null,
-    accountSummaryData:[],
-    isAddStockModalOpen:false,
-    isAddTransactionModalOpen: false,
+const pageSizeDalal = 10;
+const pageSizeAccountSummary = 10;
+const Dashboard = () => {
+  const [isAddOpeningBalanceModalOpen, setIsAddOpeningBalanceModalOpen] = useState(false);
+  const [isAddOpeningBalanceButtonVisible, setIsAddOpeningBalanceButtonVisible] = useState(false);
+  const [openingBalanceData, setOpeningBalanceData] = useState({});
+  const [selectedOpeningBalanceToUpdate, setSelectedOpeningBalanceToUpdate] = useState(null);
+  const [closingBalanceData, setClosingBalanceData] = useState({});
+  const [dalalData, setDalalData] = useState([]);
+  const [searchDalal, setSearchDalal] = useState(null);
+  const [pageDalal, setPageDalal] = useState(1);
+  const [totalDalals, setTotalDalals] = useState(0);
+  const [pageAccountSummary, setPageAccountSummary] = useState(1);
+  const [totalAccountSummary, setTotalAccountSummary] = useState(0);
+  const [searchAccountSummary, setSearchAccountSummary] = useState(null);
+  const [accountSummaryData, setAccountSummaryData] = useState([]);
+  const [isAddStockModalOpen, setIsAddStockModalOpen] = useState(false);
+  const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] = useState(false);
+  const [isDalalDataLoading, setIsDalalDataLoading] = useState(false);
+  const [isAccountSummaryLoading, setIsAccountSummaryLoading] = useState(false);
+
+  useEffect(() => {
+    getTodayOpeningBalance();
+    getTodayCloseAmount();
+    getStockAndAmtWithDalal();
+    getAccountSummary();
+  }, [])
+
+  useEffect(() => {
+    getStockAndAmtWithDalal();
+  }, [pageDalal, searchDalal])
+
+  useEffect(() => {
+    getAccountSummary();
+  }, [pageAccountSummary, searchAccountSummary])
+
+  const openAddOpeningBalanceModal = (OpeningBalanceData) => {
+    setIsAddOpeningBalanceModalOpen(true);
+    setSelectedOpeningBalanceToUpdate(OpeningBalanceData);
   }
 
-  componentDidMount(){
-    this.getTodayOpeningBalance();
-    this.getTodayCloseAmount();
-    this.getStockAndAmtWithDalal();
-    this.getAccountSummary();
-  }
-
-  openAddOpeningBalanceModal = (OpeningBalanceData) => {
-    this.setState({ isAddOpeningBalanceModalOpen: true, selectedOpeningBalanceToUpdate:OpeningBalanceData });
-  }
-  
-  closeAddOpeningBalanceModal = (reload) => {
-    this.setState({ isAddOpeningBalanceModalOpen: false,selectedOpeningBalanceToUpdate:null });
-    if(reload) {
-        this.getTodayOpeningBalance();
+  const closeAddOpeningBalanceModal = (reload) => {
+    setIsAddOpeningBalanceModalOpen(false);
+    setSelectedOpeningBalanceToUpdate(null);
+    if (reload) {
+      getTodayOpeningBalance();
     }
   }
 
-  getTodayOpeningBalance = () => {
+  const getTodayOpeningBalance = () => {
     OpeningBalanceService.getTodayOpeningBalance()
-      .then(data=>{
-        if(data.data.data){
-          this.setState({openingBalanceData: data.data.data });
+      .then(data => {
+        if (data.data.data) {
+          setOpeningBalanceData(data.data.data)
         } else {
-          this.setState({ isAddOpeningBalanceButtonVisible:true });
+          setIsAddOpeningBalanceButtonVisible(true);
         }
-        console.error("data",data);
+        console.log("data", data);
       })
-      .catch(e=>{
-        console.error("e",e);
+      .catch(e => {
+        console.error("e", e);
       })
   }
 
-  getTodayCloseAmount = () => {
+  const getTodayCloseAmount = () => {
     TransactionService.getCloseAmountToday()
-    .then(data=>{
-      if(data.data.data){
-        this.setState({ closingBalanceData: data.data.data });
-      }
-    })
-    .catch(e=>{
+      .then(data => {
+        if (data.data.data) {
+          setClosingBalanceData(data.data.data);
+        }
+      })
+      .catch(e => {
 
-    })
+      })
   }
 
-  getStockAndAmtWithDalal = () => {
-    const { pageDalal, pageSizeDalal, searchDalal }=this.state;
-    const obj={
+  const getStockAndAmtWithDalal = () => {
+    const obj = {
       page: pageDalal,
       limit: pageSizeDalal,
       search: searchDalal
     }
+    setIsDalalDataLoading(true);
     DashboardService.getStockAndAmtWithDalal(obj)
-    .then(data=>{
-      if(data.data.data && data.data.data.data){
-        this.setState({ dalalData: data.data.data.data });
-      }
-      if(data.data.data && data.data.data.count){
-        this.setState({ totalDalals: data.data.data.count });
-      }
-    })
-    .catch(e=>{
+      .then(data => {
+        setIsDalalDataLoading(false);
+        if (data.data.data && data.data.data.data) {
+          setDalalData(data.data.data.data)
+        }
+        if (data.data.data && data.data.data.count) {
+          setTotalDalals(data.data.data.count)
+        }
+      })
+      .catch(e => {
 
-    })
+      })
   }
 
-  getAccountSummary = () => {
-    const { pageAccountSummary, pageSizeAccountSummary, searchAccountSummary }=this.state;
-    const obj={
+  const getAccountSummary = () => {
+    const obj = {
       page: pageAccountSummary,
       limit: pageSizeAccountSummary,
       search: searchAccountSummary
     }
+    setIsAccountSummaryLoading(true);
     DashboardService.getAccountSummary(obj)
-    .then(data=>{
-      if(data.data.data && data.data.data.data){
-        this.setState({ accountSummaryData: data.data.data.data });
-      }
-      if(data.data.data && data.data.data.count){
-        this.setState({ totalAccountSummary: data.data.data.count });
-      }
-    })
-    .catch(e=>{
+      .then(data => {
+        setIsAccountSummaryLoading(false);
+        if (data.data.data && data.data.data.data) {
+          setAccountSummaryData(data.data.data.data);
+        }
+        if (data.data.data && data.data.data.count) {
+          setTotalAccountSummary(data.data.data.count)
+        }
+      })
+      .catch(e => {
+        setIsAccountSummaryLoading(false);
 
-    })
+      })
   }
 
-  handleSearchDalalInput = (e) => {
+  const handleSearchDalalInput = (e) => {
     const value = e.target.value;
-    this.setState({ pageDalal:1, searchDalal: value },()=>{;
-      this.getStockAndAmtWithDalal();
-    })
+    setPageDalal(1);
+    setSearchDalal(value);
   }
 
-  handlePageChange = (page) => {
-    this.setState({ pageDalal: page },()=>{
-      this.getStockAndAmtWithDalal();
-    });
+  const handlePageChange = (page) => {
+    setPageDalal(page);
   }
 
-  handleSearchAccountSummaryInput = (e) => {
+  const handleSearchAccountSummaryInput = (e) => {
     const value = e.target.value;
-    this.setState({ pageAccountSummary:1, searchAccountSummary: value },()=>{;
-      this.getAccountSummary();
-    })
+    setPageAccountSummary(1);
+    setSearchAccountSummary(value);
   }
 
-  handleAccountSummaryPageChange = (page) => {
-    this.setState({ pageAccountSummary: page },()=>{
-      this.getAccountSummary();
-    });
+  const handleAccountSummaryPageChange = (page) => {
+    setPageAccountSummary(page);
   }
 
-  openAddStockModal = (stockData) => {
-    this.setState({ isAddStockModalOpen: true, selectedStockToUpdate: stockData });
+  const openAddStockModal = () => {
+    setIsAddStockModalOpen(true);
   }
-  
-  closeAddStockModal = (reload) => {
+
+  const closeAddStockModal = () => {
     console.log("closing modal");
-    this.setState({ isAddStockModalOpen: false, selectedStockToUpdate: null });
-    // if(reload) {
-    //     this.getStocks(this.state.page);
-    // }
+    setIsAddStockModalOpen(false);
   }
 
-  openAddTransactionModal = (contactData) => {
-    this.setState({ isAddTransactionModalOpen: true, selectedTransactionToUpdate: contactData });
+  const openAddTransactionModal = () => {
+    setIsAddTransactionModalOpen(true);
   }
 
-  closeAddTransactionModal = (reload) => {
+  const closeAddTransactionModal = () => {
     console.log("closing modal");
-    this.setState({ isAddTransactionModalOpen: false, selectedTransactionToUpdate: null });
-    // if(reload) {
-    //     this.getTransactions();
-    // }
+    setIsAddTransactionModalOpen(false);
   }
 
-  
-  render(){
-    const { 
-      isAddOpeningBalanceModalOpen,isAddOpeningBalanceButtonVisible,
-      openingBalanceData ={}, selectedOpeningBalanceToUpdate,
-      closingBalanceData={}, dalalData=[], searchDalal, pageDalal, pageSizeDalal, searchAccountSummary,
-      totalDalals, accountSummaryData, pageAccountSummary, pageSizeAccountSummary, totalAccountSummary,
-      isAddStockModalOpen, isAddTransactionModalOpen
-    } = this.state;
-    const { value: amount, uuid } = openingBalanceData;
-    const { total, openingBalance } = closingBalanceData;
-    return <div>
-      {
-        isAddOpeningBalanceModalOpen &&
-        <AddOpeningBalance
-          show={isAddOpeningBalanceModalOpen}
-          closeModal={this.closeAddOpeningBalanceModal}
-          openingBalanceData={selectedOpeningBalanceToUpdate}
-        >
-        </AddOpeningBalance>
-      }
+  const { value: amount } = openingBalanceData;
+  const { total } = closingBalanceData;
+  return <div id="dashboard">
+    {
+      isAddOpeningBalanceModalOpen &&
+      <AddOpeningBalance
+        show={isAddOpeningBalanceModalOpen}
+        closeModal={closeAddOpeningBalanceModal}
+        openingBalanceData={selectedOpeningBalanceToUpdate}
+      >
+      </AddOpeningBalance>
+    }
 
-      {isAddStockModalOpen &&
-        <AddStock
-            show={isAddStockModalOpen}
-            closeModal={this.closeAddStockModal}
-            // stockData={selectedStockToUpdate}
-          >
-        </AddStock>
-      }
+    {isAddStockModalOpen &&
+      <AddStock
+        show={isAddStockModalOpen}
+        closeModal={closeAddStockModal}
+      >
+      </AddStock>
+    }
 
-      {isAddTransactionModalOpen &&
-        <AddTransaction
-            show={isAddTransactionModalOpen}
-            closeModal={this.closeAddTransactionModal}
-            // transactionData={selectedTransactionToUpdate}
-          >
-        </AddTransaction>
-      }
-       <Row>
-        <Col sm="3">
-          <Card>
-            <CardBody>
-              {!isAddOpeningBalanceButtonVisible &&
+    {isAddTransactionModalOpen &&
+      <AddTransaction
+        show={isAddTransactionModalOpen}
+        closeModal={closeAddTransactionModal}
+      >
+      </AddTransaction>
+    }
+    <Row>
+      <Col sm="12" md="3">
+        <Card>
+          <CardBody>
+            {!isAddOpeningBalanceButtonVisible &&
               <>
-                
+
                 <Row>
                   <Col sm="10">Opening Balance : {amount}</Col>
                   <Col className="text-align-right">
-                    <div onClick={this.openAddOpeningBalanceModal.bind(this,openingBalanceData)}>
-                    <Ionicon icon="md-create" fontSize="16px" color="#fdbb1f" />
-                </div>
+                    <div onClick={() => openAddOpeningBalanceModal(openingBalanceData)}>
+                      <Ionicon icon="md-create" fontSize="16px" color="#d10404" />
+                    </div>
                   </Col>
                 </Row>
                 <div> </div>
               </>}
 
-              {isAddOpeningBalanceButtonVisible &&
+            {isAddOpeningBalanceButtonVisible &&
               <>
-                <div onClick={this.openAddOpeningBalanceModal.bind(this,null)}>Add Opening Balance</div>
+                <div onClick={() => openAddOpeningBalanceModal(null)}>Add Opening Balance</div>
               </>}
-            </CardBody>
-          </Card>
-        </Col>
-        <Col sm="3">
-          <Card>
-            <CardBody>
-              {/* <div>Opening Balance : {openingBalance}</div> */}
-              <div>Current Balance : {total}</div>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col sm="6" className="text-align-right">
-          {/* <Card>
-            <CardBody> */}
-              {/* <div>Opening Balance : {openingBalance}</div> */}
-              <button onClick={this.openAddStockModal.bind(this,null)}>Add Stock</button>&nbsp;
-              <button onClick={this.openAddTransactionModal.bind(this,null)}>Add Transaction</button>
-
-            {/* </CardBody>
-          </Card> */}
-        </Col>
-      </Row>
-      <Row>
-        <Col sm="6">
-          <Card className="width-100 margin-top-10">
-            <CardBody>
+          </CardBody>
+        </Card>
+      </Col>
+      <Col sm="12" md="3">
+        <Card>
+          <CardBody>
+            <div>Current Balance : {total}</div>
+          </CardBody>
+        </Card>
+      </Col>
+      <Col sm="12" md="6" className="text-align-right">
+        <button onClick={() => openAddStockModal(null)} className="logout-button">Add Stock</button>&nbsp;
+        <button onClick={() => openAddTransactionModal(null)} className="logout-button">Add Transaction</button>
+      </Col>
+    </Row>
+    <Row>
+      <Col sm="12" md="6">
+        <Card className="width-100 margin-top-10">
+          <CardBody>
+            {isDalalDataLoading && <CustomSpinner></CustomSpinner>}
             <Row>
               <Col>
-                <h4>Dalal Data</h4>
+                <div className='dashboard-saction-title'>Dalal Data</div>
               </Col>
             </Row>
             <Row>
@@ -269,47 +257,49 @@ class Dashboard extends Component {
                   id="search"
                   type="text"
                   placeholder="Enter person name,phone numeber or company"
-                  onChange={this.handleSearchDalalInput}
+                  onChange={handleSearchDalalInput}
                   value={searchDalal}
                 ></Input>
               </Col>
             </Row>
-              <Table className="width-100 margin-top-10">
-                <thead>
-                  <tr>
-                    <th style={{width:'190px'}}>Name</th>
-                    <th>Stock Id</th>
-                    <th>Total Weight</th>
-                    <th>Total diamond piece</th>
-                    <th>Total diamond price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dalalData.map(d=><tr>
-                    <td>{d.name}</td>
-                    <td>{d.stones}</td>
-                    <td>{d.weight}</td>
-                    <td>{d.totalStones}</td>
-                    <td>{d.amount}</td>
-                  </tr>)}
-                </tbody>
-              </Table>
-              {<Pagination
-                  margin={2}
-                  page={pageDalal}
-                  pageSize={pageSizeDalal}
-                  totalRecords={totalDalals}
-                  onPageChange={this.handlePageChange}
-              ></Pagination>}
-            </CardBody>
-          </Card>
-        </Col>
-        <Col sm="6">
-          <Card className="width-100 margin-top-10">
-            <CardBody>
+            <Table className="width-100 margin-top-10" striped>
+              <thead>
+                <tr>
+                  <th style={{ width: '190px' }}>Name</th>
+                  <th>Stock Id</th>
+                  <th title="Total Weight">Weight</th>
+                  <th title="Total diamond piece">TD Piece</th>
+                  <th title='Total diamond price'>TD price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dalalData.length > 0 && dalalData.map(d => <tr>
+                  <td>{d.name}</td>
+                  <td>{d.stones}</td>
+                  <td>{d.weight}</td>
+                  <td>{d.totalStones}</td>
+                  <td>{d.amount}</td>
+                </tr>)}
+                {dalalData.length === 0 && <td colSpan={5} className="text-align-center">No data available</td>}
+              </tbody>
+            </Table>
+            {dalalData.length > 0 && <Pagination
+              margin={2}
+              page={pageDalal}
+              pageSize={pageSizeDalal}
+              totalRecords={totalDalals}
+              onPageChange={handlePageChange}
+            ></Pagination>}
+          </CardBody>
+        </Card>
+      </Col>
+      <Col sm="12" md="6">
+        <Card className="width-100 margin-top-10">
+          <CardBody>
+            {isAccountSummaryLoading && <CustomSpinner></CustomSpinner>}
             <Row>
               <Col>
-                <h4>Account Summary</h4>
+                <div className='dashboard-saction-title'>Account Summary</div>
               </Col>
             </Row>
             <Row>
@@ -319,42 +309,41 @@ class Dashboard extends Component {
                   id="search"
                   type="text"
                   placeholder="Enter person name,phone numeber or company"
-                  onChange={this.handleSearchAccountSummaryInput}
+                  onChange={handleSearchAccountSummaryInput}
                   value={searchAccountSummary}
                 ></Input>
               </Col>
             </Row>
-              <Table className="width-100 margin-top-10">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {accountSummaryData.map(d=><tr>
-                    <td>{d.name}</td>
-                    <td>{d.debit}</td>
-                    <td>{d.credit}</td>
-                    <td>{d.total}</td>
-                  </tr>)}
-                </tbody>
-              </Table>
-              {<Pagination
-                  margin={2}
-                  page={pageAccountSummary}
-                  pageSize={pageSizeAccountSummary}
-                  totalRecords={totalAccountSummary}
-                  onPageChange={this.handleAccountSummaryPageChange}
-              ></Pagination>}
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </div>
-  }
+            <Table className="width-100 margin-top-10">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Debit</th>
+                  <th>Credit</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {accountSummaryData.map(d => <tr>
+                  <td>{d.name}</td>
+                  <td>{d.debit}</td>
+                  <td>{d.credit}</td>
+                  <td>{d.total}</td>
+                </tr>)}
+              </tbody>
+            </Table>
+            {<Pagination
+              margin={2}
+              page={pageAccountSummary}
+              pageSize={pageSizeAccountSummary}
+              totalRecords={totalAccountSummary}
+              onPageChange={handleAccountSummaryPageChange}
+            ></Pagination>}
+          </CardBody>
+        </Card>
+      </Col>
+    </Row>
+  </div>
 }
 
 export default Dashboard;

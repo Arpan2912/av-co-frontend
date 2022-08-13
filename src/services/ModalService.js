@@ -5,7 +5,9 @@ export default class ModalService {
   static openAlert(title, msg, suceess) {
     // swal(title, msg, suceess);
     swal({
+      title: title,
       text: msg,
+      icon: suceess,
       dangerMode: suceess === 'success' ? false : true,
       button: {
         text: "OK",

@@ -1,217 +1,195 @@
-import React, { Component } from 'react';
-import { Row, Col, Card, CardBody, Table, Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import React, { useEffect, useState } from 'react';
+import { Row, Col, Card, CardBody, Table, Input, Button } from 'reactstrap';
+import { useNavigate } from 'react-router';
 import Ionicon from 'react-ionicons';
 
+// components
 import Pagination from '../../components/Pagination/Pagination';
+import CustomSpinner from '../../components/CustomSpinner/CustomSpinner';
 
+// services
 import ContactService from '../../services/ContactService';
-import Validation from '../../services/Validation';
 
+// modals
 import AddContact from '../../modal/AddContact';
 import UploadContact from '../../modal/UploadContactModal';
 
-import {downlodFile} from '../../utils';
+// utils
+import { downlodFile } from '../../utils';
+
+// css
 import './Contact.css';
 
 const pageSize = 10;
 
 
-class Contact extends Component {
-    state = {
-        contacts: [],
-        downloadExcelFields:['all'],
-        selectedContactToUpdate: null,
-        isAddContactModalOpen: false,
-        isUploadContactModalOpen: false,
-        page: 1,
-        totalRecords: 0,
-        search: null,
-        controls:{
-            downloadCheckbox: {
-                value: ['all'],
-                valid: null,
-                touched: false,
-                required: true,
-                showErrorMsg: false
-              },
-        }
-    }
+const Contact = () => {
+	const navigate = useNavigate();
+	const [contacts, setContacts] = useState([]);
+	const [selectedContactToUpdate, setSelectedContactToUpdate] = useState(null);
+	const [isAddContactModalOpen, setIsAddContactModalOpen] = useState(false);
+	const [isUploadContactModalOpen, setIsUploadContactModalOpen] = useState(false);
+	const [page, setPage] = useState(1);
+	const [totalRecords, setTotalRecords] = useState(0);
+	const [search, setSearch] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
+	// const { downloadCheckbox } = controls;
 
-    componentDidMount() {
-        this.getContacts(this.state.page);
-    }
+	useEffect(() => {
+		console.log("rendering")
+		getContacts(page);
+	}, [])
 
-    getContacts = (page, search,isDownload) => {
-        let {controls}=this.state;
-        let {downloadCheckbox}=controls;
-        let body={
-            downloadExcelFields:downloadCheckbox.value
-        }
-        ContactService.getContacts(page, pageSize, search,isDownload,body)
-            .then(data => {
-                console.log(data.data);
-                if(isDownload){
-                    if(data.data.data && data.data.data.file){
-                        downlodFile(data.data.data.file);
-                    }
-                } else {
-                    const contacts = data.data.data.contacts;
-                    const totalRecords = data.data.data.count;
-                    this.setState({ contacts, totalRecords });
-                }      
-            })
-            .catch(e => {
-
-            })
-    }
-
-    openAddContactModal = (contactData) => {
-        this.setState({ isAddContactModalOpen: true, selectedContactToUpdate: contactData });
-    }
-    closeAddContactModal = (reload) => {
-        console.log("closing modal");
-        this.setState({ isAddContactModalOpen: false, selectedContactToUpdate: null });
-        if(reload) {
-            this.getContacts(this.state.page);
-        }
-    }
-
-    openTransactions = (contactData) =>{
-        this.props.history.push({
-            pathname: "/transactions",
-            contactData
-        })
-    }
-
-    openUploadContactModal = () => {
-        this.setState({ isUploadContactModalOpen: true });
-    }
-    closeUploadContactModal = (reload) => {
-        this.setState({ isUploadContactModalOpen: false });
-        if(reload) {
-            this.getContacts(this.state.page);
-        }
-    }
-
-    
-
-    handlePageChange = (page) => {
-        this.setState({ page: page });
-        this.getContacts(page, this.state.search);
-        // this.getAllDealerReport(page, null, false, uuid);
-    }
-
-    handleSearchInput = (e) => {
-        const value = e.target.value;
-        this.setState({ search: value });
-        this.searchContactData(value);
-    }
-
-    searchContactData = (search) => {
-        this.setState({ page: 1 });
-        this.getContacts(1, search);
-    }
-
-    downloadExcel=()=>{
-        this.getContacts(this.state.page,this.state.search,true);
-    }
+	const getContacts = (page, search) => {
+		setIsLoading(true);
+		ContactService.getContacts(page, pageSize, search)
+			.then(data => {
+				setIsLoading(false);
+				console.log(data.data);
+				const contacts = data.data.data.contacts;
+				const totalRecords = data.data.data.count;
+				setContacts(contacts);
+				setTotalRecords(totalRecords);
+			})
+			.catch(e => {
+				setIsLoading(false);
+			})
+	}
 
 
-    render() {
-        const { contacts, selectedContactToUpdate, isAddContactModalOpen,
-             page, totalRecords, search,controls,
-             isUploadContactModalOpen
-            } = this.state;
-        const {downloadCheckbox}=controls;
-        const prepareRows = contacts.map(c => <tr>
-            <td>{c.name}</td>
-            <td>
-                <div>{c.mobile1}</div>
-                <div>{c.mobile2}</div>
-            </td>
-            <td>{c.email}</td>
-            <td>{c.address}</td>
-            <td>{c.city}</td>
-            <td>{c.company}</td>
-            <td>{c.type}</td>
-            <td>
-                <span  onClick={this.openAddContactModal.bind(this, c)}>
-                    <Ionicon icon="md-create" fontSize="16px" color="#fdbb1f" />    
-                </span>&nbsp;
-                <span  onClick={this.openTransactions.bind(this, c)} title="Transactions">
-                    <Ionicon icon="md-git-compare" fontSize="16px" color="#fdbb1f"></Ionicon>
-                </span>
-            </td>
-        </tr>)
-        return (
-            <div id="contact">
-                {isAddContactModalOpen &&
-                    <AddContact
-                        show={isAddContactModalOpen}
-                        closeModal={this.closeAddContactModal}
-                        contactData={selectedContactToUpdate}>
-                    </AddContact>}
+	const openAddContactModal = (contactData) => {
+		setIsAddContactModalOpen(true);
+		setSelectedContactToUpdate(contactData);
+	}
+	const closeAddContactModal = (reload) => {
+		console.log("closing modal");
+		setIsAddContactModalOpen(false);
+		setSelectedContactToUpdate(null);
+		if (reload) {
+			getContacts(page);
+		}
+	}
 
-                    {isUploadContactModalOpen &&
-                    <UploadContact
-                        show={isUploadContactModalOpen}
-                        closeModal={this.closeUploadContactModal}
-                        >
-                    </UploadContact>}
-                <Row>
-                    <Col xl="12">
-                        <Card>
-                            <CardBody>
-                                <Row>
-                                    <Col sm="4">
-                                        <Input
-                                            name="search"
-                                            id="search"
-                                            type="text"
-                                            placeholder="Enter person name,phone numeber or company"
-                                            onChange={this.handleSearchInput}
-                                            value={search}
-                                        ></Input>
-                                    </Col>
-                                    <Col className="text-align-right">
-                                    <span className="download-link" onClick={this.openAddContactModal.bind(this, null)}>Add Contact</span>&nbsp;&nbsp;
-                                        <span className="download-link" onClick={this.openUploadContactModal}>Upload Contact</span>
-                                    </Col>
-                                </Row>
+	const openTransactions = (contactData) => {
+		navigate("/transactions", { state: { contactData } })
+	}
 
-                                <Table className="width-100 margin-top-10">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Phone</th>
-                                            <th>Email</th>
-                                            <th>Address</th>
-                                            <th>City</th>
-                                            <th>Company</th>
-                                            <th>Type</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {prepareRows}
-                                    </tbody>
-                                </Table>
-                                {<Pagination
-                                    margin={2}
-                                    page={page}
-                                    pageSize={pageSize}
-                                    totalRecords={totalRecords}
-                                    onPageChange={this.handlePageChange}
-                                ></Pagination>}
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    
-                </Row>
+	const openUploadContactModal = () => {
+		setIsUploadContactModalOpen(true);
+	}
+	const closeUploadContactModal = (reload) => {
+		setIsUploadContactModalOpen(false);
 
-            </div>
-        );
-    }
+		if (reload) {
+			getContacts(page);
+		}
+	}
+
+	const handlePageChange = (page) => {
+		setPage(page)
+		getContacts(page, search);
+	}
+
+	const handleSearchInput = (e) => {
+		const value = e.target.value;
+		setSearch(value);
+		searchContactData(value);
+	}
+
+	const searchContactData = (search) => {
+		setPage(1);
+		getContacts(1, search);
+	}
+
+	const prepareRows = () => contacts.map(c => <tr>
+		<td>{c.name}</td>
+		<td>
+			<div>{c.mobile1}</div>
+			<div>{c.mobile2}</div>
+		</td>
+		<td>{c.email}</td>
+		<td>{c.address}</td>
+		<td>{c.city}</td>
+		<td>{c.company}</td>
+		<td>{c.type}</td>
+		<td>
+			<span onClick={() => openAddContactModal(c)}>
+				<Ionicon icon="md-create" fontSize="16px" color="#ad1d1d" />
+			</span>&nbsp;
+			<span onClick={() => openTransactions(c)} title="Transactions">
+				<Ionicon icon="md-git-compare" fontSize="16px" color="#ad1d1d"></Ionicon>
+			</span>
+		</td>
+	</tr>)
+
+	return (
+		<div id="contact">
+			{isAddContactModalOpen &&
+				<AddContact
+					show={isAddContactModalOpen}
+					closeModal={closeAddContactModal}
+					contactData={selectedContactToUpdate}>
+				</AddContact>}
+
+			{isUploadContactModalOpen &&
+				<UploadContact
+					show={isUploadContactModalOpen}
+					closeModal={closeUploadContactModal}
+				>
+				</UploadContact>}
+			<Row>
+				<Col xl="12">
+					<Card>
+						<CardBody>
+							<Row>
+								<Col sm="4">
+									<Input
+										name="search"
+										id="search"
+										type="text"
+										placeholder="Enter person name,phone numeber or company"
+										onChange={handleSearchInput}
+										value={search}
+									></Input>
+								</Col>
+								<Col className="text-align-right">
+									<Button className="logout-button" onClick={() => openAddContactModal(null)}>Add Contact</Button>&nbsp;&nbsp;
+									<Button className="logout-button" onClick={() => openUploadContactModal()}>Upload Contact</Button>
+								</Col>
+							</Row>
+							{isLoading && <CustomSpinner></CustomSpinner>}
+							<Table className="width-100 margin-top-10">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Phone</th>
+										<th>Email</th>
+										<th>Address</th>
+										<th>City</th>
+										<th>Company</th>
+										<th>Type</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									{prepareRows()}
+								</tbody>
+							</Table>
+							{<Pagination
+								margin={2}
+								page={page}
+								pageSize={pageSize}
+								totalRecords={totalRecords}
+								onPageChange={handlePageChange}
+							></Pagination>}
+						</CardBody>
+					</Card>
+				</Col>
+
+			</Row>
+
+		</div>
+	);
 }
 
 export default Contact;

@@ -373,7 +373,7 @@ export default class AddStock extends Component {
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
         if (message) {
-          ModalService.openAlert('Person', message, 'success');
+          ModalService.openAlert('Stock', message, 'success');
         }
         this.setState({ isLoading: false });
         isLoading = false;
@@ -382,6 +382,8 @@ export default class AddStock extends Component {
       })
       .catch(e => {
         this.setState({ isLoading: false });
+        const message = e.response && e.response.data && e.response.data.message ? e.response.data.message : 'Something went wrong';
+        ModalService.openAlert('Stock', message, 'error');
         isLoading = false;
       })
   }
@@ -430,7 +432,7 @@ export default class AddStock extends Component {
         const message = data.data && data.data.message ? data.data.message : null;
         this.setState({ isLoading: false });
         if (message) {
-          ModalService.openAlert('Person', message, 'success');
+          ModalService.openAlert('Stock', message, 'success');
         }
         this.props.closeModal(true);
         // this.getPerson();
@@ -439,7 +441,7 @@ export default class AddStock extends Component {
       .catch(e => {
         this.setState({ isLoading: false });
         const message = e.response && e.response.data && e.response.data.message ? e.response.data.message : 'Something went wrong';
-        ModalService.openAlert('Person', message, 'error');
+        ModalService.openAlert('Stock', message, 'error');
       })
   }
 
@@ -663,7 +665,7 @@ export default class AddStock extends Component {
           </Row>}
 
 
-          <Button onClick={stockData ? this.updateStock : this.saveDetail}>
+          <Button className='logout-button' onClick={stockData ? this.updateStock : this.saveDetail}>
             Save
           </Button>
         </Form>

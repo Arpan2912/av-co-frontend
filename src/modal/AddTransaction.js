@@ -10,6 +10,8 @@ import ContactService from '../services/ContactService';
 import Validation from '../services/Validation';
 import ModalService from '../services/ModalService';
 
+import { showErrorMsg } from '../utils';
+
 let isLoading = false;
 
 let defaultControls = {
@@ -328,7 +330,7 @@ export default class AddTransaction extends Component {
       .then(data => {
         const message = data.data && data.data.message ? data.data.message : null;
         if(message) {
-          ModalService.openAlert('Person', message, 'success');
+          ModalService.openAlert('Transaction', message, 'success');
         }
         this.setState({ isLoading: false });
         isLoading = false;
@@ -336,6 +338,7 @@ export default class AddTransaction extends Component {
         // this.resetControls();
       })
       .catch(e => {
+				showErrorMsg('Transaction', e);
         this.setState({ isLoading: false });
         isLoading = false;
       })
@@ -494,7 +497,7 @@ export default class AddTransaction extends Component {
           </Row>
           
           
-          <Button onClick={transactionData ? this.saveDetail.bind(this,true): this.saveDetail}>
+          <Button className='logout-button' onClick={transactionData ? this.saveDetail.bind(this,true): this.saveDetail}>
             Save
           </Button>
         </Form>

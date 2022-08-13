@@ -3,7 +3,6 @@
 // import { connect } from 'react-redux';
 
 import Login from '../pages/Login/Login';
-import Logout from '../pages/Logout/Logout';
 import Contact from '../pages/Contact/Contact';
 import Stocks from '../pages/Stocks/Stocks';
 import Transactions from '../pages/Transactions/Transactions';
@@ -23,12 +22,12 @@ export const publicRouteObj = [
     component: Login,
     key: 'Login',
   },
-  {
-    exact: true,
-    path: '/logout',
-    component: Logout,
-    key: 'Logout',
-  },
+  // {
+  //   exact: true,
+  //   path: '/logout',
+  //   component: Logout,
+  //   key: 'Logout',
+  // },
 ];
 
 export const privateRouteObj = [
@@ -63,25 +62,3 @@ export const privateRouteObj = [
     key: 'Dashboard',
   }
 ];
-
-// class RouterConfig extends Component {
-
-//   componentWillReceiveProps(nextProps) {
-//     console.log("Router config", nextProps);
-//   }
-
-//   render() {
-//     return (
-//       <div>
-
-//       </div>
-//     );
-//   }
-// }
-
-// const mapStateToProps = state => ({
-//   route: state.route
-// })
-
-// export default connect(mapStateToProps, null)(RouterConfig);
-// export default RouterConfig;

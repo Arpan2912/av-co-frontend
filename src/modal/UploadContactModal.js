@@ -58,7 +58,7 @@ class UploadContactModal extends Component {
                         {this.state.file && <div>{this.state.file.name}</div>}
                         {this.state.errorMessage && !this.state.file && <div className="error">* {this.state.errorMessage}</div>}
                         <div style={{ textAlign: 'right' }}>
-                            <Button style={{ width: '100%', backgroundColor: '#ab3b60' }} onClick={this.uploadFile.bind(this)}>Upload </Button>
+                            <Button style={{ width: '100%' }} className='logout-button' onClick={this.uploadFile.bind(this)}>Upload </Button>
                         </div>
                     </ModalBody>
                 </Modal>

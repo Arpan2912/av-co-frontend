@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-
-import { updateHeaderMenus } from '../../actions/header-action';
+import { updateHeaderMenus } from '../../redux-slices/header-slice';
 import StorageService from '../../services/StorageService';
 
 import './Logout.css';

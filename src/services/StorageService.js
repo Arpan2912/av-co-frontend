@@ -31,8 +31,9 @@ export default class StorageService {
   }
 
   static getCompanyDetail() {
-    const user = localStorage.getItem("company");
-    return JSON.parse(user);
+    const company = localStorage.getItem("company");
+    console.log("company",typeof company,!company)
+    return JSON.parse(company);
   }
 
   static removeCompanyDetail() {

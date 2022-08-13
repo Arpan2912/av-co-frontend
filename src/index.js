@@ -1,19 +1,25 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { connect, Provider } from 'react-redux';
+import { createRoot } from 'react-dom/client';
+import {  Provider } from 'react-redux';
+import { HashRouter as Router } from 'react-router-dom';
 
-import './index.css';
-import App from './App';    
+import App from './App';
+import store from './store';
 import * as serviceWorker from './serviceWorker';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "react-datepicker/dist/react-datepicker.css";
-import store from './store';
+import './index.css';
 
-ReactDOM.render(
-  // Provider is root component for app because of redux
+const container = document.getElementById('root');
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
+
+root.render(
   <Provider store={store}>
+    <Router>
       <App />
-  </Provider>,
-  document.getElementById('root')
+    </Router>
+  </Provider>
 );
+
 serviceWorker.unregister();

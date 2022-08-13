@@ -1,88 +1,99 @@
-import React, { Fragment, Component } from 'react';
-import { HashRouter as Router, NavLink } from 'react-router-dom';
-import { Row, Col } from 'reactstrap';
-import { connect } from 'react-redux';
+import React, { Fragment, Component, useState, useEffect } from 'react';
+import { HashRouter as Router, NavLink, useNavigate } from 'react-router-dom';
+import { Row, Col, Button } from 'reactstrap';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import Routes from './router/routes';
-import { updateCompanyDetail } from './actions/header-action';
+import { updateCompanyDetail, updateHeaderMenus } from './redux-slices/header-slice';
+// import { updateCompanyDetail, updateHeaderMenus } from './actions/header-action';
 import StorageService from './services/StorageService';
 import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 
-class App extends Component {
+const App = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const headersReducer = useSelector(state => state)
+  console.log("headersReducer", headersReducer)
 
-  state = {
-    updateHeader: 'login',
-    companyDetail: null
-  }
+  const headerReducer = useSelector(state => state.headerReducer)
+  const { header: updateHeader, companyDetail } = headerReducer
+  // const [updateHeader, setUpdateHeader] = useState('login');
+  // const [companyDetail, setCompanyDetail] = useState(null);
+  const token = StorageService.getToken();
 
-  componentDidMount() {
+  useEffect(() => {
     const companyDetail = StorageService.getCompanyDetail();
-    this.props.updateCompanyDetail(companyDetail);
-  }
+    dispatch(updateCompanyDetail(companyDetail));
+  }, [])
 
-  componentWillReceiveProps(nextProps) {
-    console.log("header props", nextProps);
-    const headerReducer = nextProps.headerReducer;
-    const updateHeader = headerReducer && headerReducer.header ? headerReducer.header : 'login';
-    const companyDetail = headerReducer && headerReducer.companyDetail ? headerReducer.companyDetail : null;
-    this.setState({ updateHeader: updateHeader, companyDetail });
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   console.log("header props", nextProps);
+  //   const headerReducer = nextProps.headerReducer;
+  //   const updateHeader = headerReducer && headerReducer.header ? headerReducer.header : 'login';
+  //   const companyDetail = headerReducer && headerReducer.companyDetail ? headerReducer.companyDetail : null;
+  //   this.setState({ updateHeader: updateHeader, companyDetail });
+  // }
 
-  logoutFromCompany = () => {
+  const logoutFromCompany = () => {
     StorageService.removeCompanyDetail();
-    this.props.updateCompanyDetail(null);
+    dispatch(updateCompanyDetail(null));
+    navigate("/company")
   }
 
-  render() {
-    const { updateHeader, companyDetail } = this.state;
-    console.log("updateHeader", updateHeader);
-    console.log("companyDetail", companyDetail);
-    const token = StorageService.getToken();
-    return (
-      <div>
-        <Router>
+  const logout = () => {
+    StorageService.removeToken();
+    StorageService.removeCompanyDetail();
+    dispatch(updateHeaderMenus("logout"));
+    dispatch(updateCompanyDetail(null));
+    navigate("/")
+    // this.props.history.push("/");
+  }
+  // render() {
+  // const { updateHeader, companyDetail } = this.state;
+  // console.log("updateHeader", updateHeader);
+  // console.log("companyDetail", companyDetail);
+  return (
+    <div>
+      {/* <Router> */}
 
-          {/* <header className="App-header">
+      {/* <header className="App-header">
         </header> */}
-          <header style={{ height: '50px' }}>
-            <Row>
-              <Col sm="4" style={{ lineHeight: '67px' }}>
-                <span style={{ fontWeight: 'bold', fontSize: '20px', paddingLeft: '20px' }}>AV&Co.</span>
-                {companyDetail && <span
-                  style={{ fontSize: '20px', paddingLeft: '20px', cursor: 'pointer' }}
-                  onClick={this.logoutFromCompany}
-                >
-                  Logout From {companyDetail.company_name}
-                </span>}
-              </Col>
-              {token && <Fragment>
-                <Col sm="6" className="text-align-right">
-                  {companyDetail && <>
-                    <NavLink exact activeClassName="active" className="nav-link" to="/dashboard">Dashboard</NavLink>
-                    <NavLink exact activeClassName="active" className="nav-link" to="/contact">Contact</NavLink>
-                    <NavLink exact activeClassName="active" className="nav-link" to="/stocks">Stock</NavLink>
-                    <NavLink exact activeClassName="active" className="nav-link" to="/transactions">Transactions</NavLink>
-                  </>}
-                </Col>
-                <Col sm="2" className="text-align-right">
-                  <NavLink exact activeClassName="active" className="nav-link" to="/logout">Logout</NavLink>
+      {/* <header style={{ height: '50px' }}> */}
+      <Row className='header'>
+        <Col sm="4" style={{ lineHeight: '67px' }}>
+          <span className='logo-title'>AV&Co.</span>
+          {companyDetail && <span
+            className='company-header-text'
+            onClick={logoutFromCompany}
+          >
+            Logout From <span className='company-header-title'>{companyDetail.company_name}</span>
+          </span>}
+        </Col>
+        {token && <Fragment>
+          <Col sm="7" className="text-align-right">
+            {companyDetail && <>
+              <NavLink exact activeClassName="active" className="nav-link" to="/dashboard">Dashboard</NavLink>
+              <NavLink exact activeClassName="active" className="nav-link" to="/contact">Contact</NavLink>
+              <NavLink exact activeClassName="active" className="nav-link" to="/stocks">Stock</NavLink>
+              <NavLink exact activeClassName="active" className="nav-link" to="/transactions">Transactions</NavLink>
+            </>}
+          </Col>
+          <Col sm="1" className="text-align-right logout-button-container">
+            <Button className='logout-button' onClick={() => logout()}>Logout</Button>
+            {/* <NavLink exact activeClassName="active" className="nav-link" to="/logout">Logout</NavLink> */}
 
-                </Col>
-              </Fragment>}
-            </Row>
-          </header>
-          <hr />
+          </Col>
+        </Fragment>}
+      </Row>
+      {/* </header> */}
+      {/* <hr /> */}
 
-          <Routes />
-        </Router>
-      </div>
-    )
-  }
+      <Routes />
+      {/* </Router> */}
+    </div>
+  )
 }
-
-const mapStateToProps = state => ({
-  headerReducer: state.headerReducer
-})
-export default connect(mapStateToProps, { updateCompanyDetail })(App);
+// }
+export default App;
 
 
